@@ -1,6 +1,6 @@
 "use server";
 
-import { makeAlpacaApiRequest } from "./alpaca-api";
+import { makeAlpacaApiRequest } from "@/apis/alpaca-api";
 
 export async function getStockPricing({
   stocks = "",
@@ -13,14 +13,15 @@ export async function getStockPricing({
   });
 
   if (error) {
+    console.error("Error fetching stock data", error);
     return {
-      error,
+      error: true,
       stock: null,
     };
   }
 
   return {
-    error: null,
+    error: false,
     stock: data,
   };
 }

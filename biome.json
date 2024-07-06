@@ -1,7 +1,9 @@
 {
 	"linter": {
 		"rules": {
-			"suspicious": {},
+			"suspicious": {
+				"noExplicitAny": "off"
+			},
 			"style": {
 				"noNonNullAssertion": "off"
 			}

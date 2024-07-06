@@ -1,9 +1,13 @@
 import { NavigationProvider } from "@/components/navigation/NavigationProvider";
 
-export default function RootLayout({
-  children,
+export default function AppLayout({
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return <NavigationProvider>{children}</NavigationProvider>;
+	return (
+		<NavigationProvider>
+			{children}
+		</NavigationProvider>
+	);
 }
