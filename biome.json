@@ -1,0 +1,20 @@
+{
+	"linter": {
+		"rules": {
+			"suspicious": {},
+			"style": {
+				"noNonNullAssertion": "off"
+			}
+		}
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": false,
+		"ignore": [],
+		"attributePosition": "auto",
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineWidth": 80,
+		"lineEnding": "lf"
+	}
+}
