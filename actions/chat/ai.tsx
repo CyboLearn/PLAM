@@ -5,9 +5,9 @@ import { createAI, getAIState, getMutableAIState, streamUI } from "ai/rsc";
 import { z } from "zod";
 import type { ReactNode } from "react";
 import { openai } from "@ai-sdk/openai";
-import { StockDisplay } from "@/components/chat/finance/StockDisplay";
 import { getStockPricing } from "@/actions/finance/get-stock-information";
 import Markdown from "react-markdown";
+import { Strong, Text } from "@/components/ui/text";
 
 export interface ServerMessage {
 	role: "user" | "assistant" | "function";
@@ -38,7 +38,11 @@ export async function converse(input: string): Promise<ClientMessage> {
 				]);
 			}
 
-			return <Markdown className="prose dark:prose-invert prose-zinc">{content}</Markdown>; // use it here
+			return (
+				<Markdown className="prose dark:prose-invert prose-zinc">
+					{content}
+				</Markdown>
+			); // use it here
 		},
 		tools: {
 			showStockInformation: {
@@ -69,7 +73,30 @@ export async function converse(input: string): Promise<ClientMessage> {
 
 					const data = await getStockPricing({ stocks: symbol });
 
-					return <StockDisplay symbol={symbol} data={data} />;
+					const quote = data?.stock?.quotes?.[symbol];
+
+					if (!quote) {
+						return (
+							<div>
+								<Text>
+									No data available for stock symbol: <Strong> {symbol}</Strong>
+								</Text>
+							</div>
+						);
+					}
+
+					return (
+						<div>
+							<Text>
+								Ticker: <Strong> {symbol}</Strong>
+							</Text>
+							<Text>
+								Ask price: <Strong>${quote.ap.toFixed(2)}</Strong>
+								<br />
+								Bid price: <Strong>${quote.bp.toFixed(2)}</Strong>
+							</Text>
+						</div>
+					);
 				},
 			},
 		},

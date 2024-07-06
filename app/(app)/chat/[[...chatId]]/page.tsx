@@ -35,15 +35,15 @@ export default function ChatPanel() {
 	return (
 		<div className="flex flex-col h-full">
 			<div className="flex flex-col overflow-y-scroll">
-				<div className="flex flex-col w-full p-2 mb-8">
+				<div className="flex flex-col w-full p-2 mb-8 gap-6">
 					{conversation.map((message: ClientMessage) => {
 						if (message.role === "user") {
 							return (
 								<div
 									key={message.id}
-									className="ml-auto w-full flex flex-col gap-y-1.5 items-end max-w-md"
+									className="ml-auto w-full flex flex-col gap-y-1.5 items-end max-w-xl"
 								>
-									<Markdown className="rounded-t-lg rounded-bl-lg bg-zinc-50/80 dark:bg-zinc-950/80 px-4 py-2 prose dark:prose-invert prose-zinc">
+									<Markdown className="min-w-48 rounded-t-lg rounded-bl-lg bg-zinc-50/80 dark:bg-zinc-950/80 px-4 py-2 prose dark:prose-invert prose-zinc">
 										{message.display as string}
 									</Markdown>
 									<Avatar
@@ -58,9 +58,9 @@ export default function ChatPanel() {
 						return (
 							<div
 								key={message.id}
-								className="mr-auto w-full flex flex-col gap-y-1.5 items-start max-w-xl"
+								className="mr-auto w-full flex flex-col gap-y-1.5 items-start max-w-xl" // max-w-4xl
 							>
-								<div className="rounded-t-lg rounded-br-lg bg-zinc-50/80 dark:bg-zinc-950/80 px-4 py-2">
+								<div className="min-w-80 min-h-10 rounded-t-lg rounded-br-lg bg-zinc-50/80 dark:bg-zinc-950/80 px-4 py-2">
 									{message.display}
 								</div>
 								<Avatar
