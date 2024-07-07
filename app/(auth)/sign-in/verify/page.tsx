@@ -1,15 +1,17 @@
 import { generatePageMeta } from "@/app/seo/generate";
+import AuthVerifyPage from "@/components/auth/auth-verify";
+import { Suspense } from "react";
 
 export const metadata = generatePageMeta({
-  url: "/auth/verify",
+  url: "/sign-in/verify",
   title: "Verify Login",
   description: "Verify your PLAM account login"
 });
 
 export default function PLAMLoginVerification() {
   return (
-    <main>
-      <h1>Empty</h1>
-    </main>
+    <Suspense>
+      <AuthVerifyPage />
+    </Suspense>
   )
 }

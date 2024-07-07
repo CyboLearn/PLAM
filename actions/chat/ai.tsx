@@ -5,9 +5,16 @@ import { createAI, getAIState, getMutableAIState, streamUI } from "ai/rsc";
 import { z } from "zod";
 import type { ReactNode } from "react";
 import { openai } from "@ai-sdk/openai";
-import { getStockPricing } from "@/actions/finance/get-stock-information";
 import Markdown from "react-markdown";
-import { Strong, Text } from "@/components/ui/text";
+import { StockPrice } from "@/components/chat/finance/StockPrice";
+
+// UUID
+import { v4 as uuid } from "uuid";
+import { createClient } from "@/utils/supabase/server";
+
+const tools = {
+	showStockInformation: StockPrice,
+} as any;
 
 export interface ServerMessage {
 	role: "user" | "assistant" | "function";
@@ -24,18 +31,33 @@ export interface ClientMessage {
 export async function converse(input: string): Promise<ClientMessage> {
 	"use server";
 
-	const history = getMutableAIState();
+	const aiState = getMutableAIState();
+
+	aiState.update({
+		...aiState.get(),
+		history: [...aiState.get().history, { role: "user", content: input }],
+	});
 
 	const result = await streamUI({
 		model: openai("gpt-3.5-turbo"),
-		messages: [...history.get(), { role: "user", content: input }],
+		messages: [
+			...aiState.get().history.map((message: any) => ({
+				role: message.role,
+				content: message.content,
+			})),
+		],
 		text: ({ content, done }) => {
 			if (done) {
-				history.done((messages: ServerMessage[]) => [
-					...messages,
-					{ role: "user", content: input },
-					{ role: "assistant", content },
-				]);
+				aiState.done({
+					...aiState.get(),
+					history: [
+						...aiState.get().history,
+						{
+							role: "assistant",
+							content,
+						},
+					],
+				});
 			}
 
 			return (
@@ -57,46 +79,26 @@ export async function converse(input: string): Promise<ClientMessage> {
 						.describe("The number of months to get historical information for"),
 				}),
 				generate: async ({ symbol, numOfMonths }) => {
-					history.done((messages: ServerMessage[]) => [
-						...messages,
-						{
-							role: "assistant",
-							tool_calls: [
-								{
-									name: "showStockInformation",
-									content: JSON.stringify({ symbol, numOfMonths }),
-								},
-							],
-							content: `{"symbol": "${symbol}", "numOfMonths": ${numOfMonths}}`,
-						},
-					]);
+					const toolProps = { symbol, numOfMonths };
 
-					const data = await getStockPricing({ stocks: symbol });
+					aiState.done({
+						...aiState.get(),
+						history: [
+							...aiState.get().history,
+							{
+								role: "assistant",
+								tool_calls: [
+									{
+										name: "showStockInformation",
+										content: JSON.stringify(toolProps),
+									},
+								],
+								content: JSON.stringify(toolProps),
+							},
+						],
+					});
 
-					const quote = data?.stock?.quotes?.[symbol];
-
-					if (!quote) {
-						return (
-							<div>
-								<Text>
-									No data available for stock symbol: <Strong> {symbol}</Strong>
-								</Text>
-							</div>
-						);
-					}
-
-					return (
-						<div>
-							<Text>
-								Ticker: <Strong> {symbol}</Strong>
-							</Text>
-							<Text>
-								Ask price: <Strong>${quote.ap.toFixed(2)}</Strong>
-								<br />
-								Bid price: <Strong>${quote.bp.toFixed(2)}</Strong>
-							</Text>
-						</div>
-					);
+					return <StockPrice {...toolProps} />;
 				},
 			},
 		},
@@ -109,31 +111,75 @@ export async function converse(input: string): Promise<ClientMessage> {
 	};
 }
 
-export const AIProvider = createAI<ServerMessage[], ClientMessage[]>({
+export type AIState = {
+	chatId: string;
+	history: ServerMessage[];
+};
+
+export const AIProvider = createAI<AIState, ClientMessage[]>({
 	actions: {
 		converse,
 	},
-	onSetAIState: async (event) => {
+	initialUIState: [],
+	initialAIState: { chatId: uuid(), history: [] },
+	onSetAIState: async ({ state }) => {
 		"use server";
 
-		const { done, state } = event;
-		console.log(event);
+		const supabase = createClient();
 
-		console.warn("AI State set called");
+		const {
+			data: { user },
+			error,
+		} = await supabase.auth.getUser();
 
-		if (done) {
-			console.log(done, state);
+		if (error) {
+			throw new Error("Failed to authenticate");
 		}
+
+		const { chatId, history } = state;
+
+		console.warn("AI State set called", chatId);
+
+		await supabase
+			.from("chats")
+			.upsert({ chat_id: chatId, chat: history, user_id: user?.id });
 	},
 	onGetUIState: async () => {
 		"use server";
 
-		const history: ServerMessage[] = getAIState() as any;
+		const { history } = getAIState();
 
-		return history.map(({ role, content }) => ({
-			id: generateId(),
-			role,
-			display: role === "function" ? <div>function</div> : content,
-		}));
+		return history.map((state: ServerMessage) => {
+			const { role, content, tool_calls = null } = state;
+
+			const hasToolCalls = tool_calls !== null;
+
+			if (hasToolCalls) {
+				const toolName = tool_calls[0].name;
+				const toolProps = JSON.parse(tool_calls[0].content);
+
+				const ToolComponent = tools?.[toolName];
+
+				if (!ToolComponent) {
+					return {
+						id: generateId(),
+						role,
+						display: content,
+					};
+				}
+
+				return {
+					id: generateId(),
+					role,
+					display: <ToolComponent {...toolProps} />,
+				};
+			}
+
+			return {
+				id: generateId(),
+				role,
+				display: content,
+			};
+		});
 	},
 });

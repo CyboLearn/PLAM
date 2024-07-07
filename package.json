@@ -20,11 +20,15 @@
     "@supabase/supabase-js": "^2.44.2",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.13",
+    "@types/uuid": "^10.0.0",
     "ai": "^3.2.16",
     "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
     "framer-motion": "^11.2.13",
+    "input-otp": "^1.2.4",
     "next": "15.0.0-rc.0",
     "next-themes": "^0.3.0",
+    "nuqs": "^1.17.4",
     "openai": "^4.52.3",
     "react": "19.0.0-rc-f994737d14-20240522",
     "react-dom": "19.0.0-rc-f994737d14-20240522",
@@ -32,6 +36,7 @@
     "recharts": "^2.13.0-alpha.4",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.3.0",
+    "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

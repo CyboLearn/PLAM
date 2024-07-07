@@ -17,8 +17,6 @@ export async function makeAlpacaApiRequest({
       : process.env.ALPACA_API_ENDPOINT!
   }/${resource}`;
 
-  console.log(url)
-
   const response = await fetch(url, {
     method,
     headers: {
@@ -33,12 +31,6 @@ export async function makeAlpacaApiRequest({
     console.error(
       `Error making Alpaca API request: ${response.status} ${response.statusText}`
     );
-    console.warn({
-      endpoint,
-      resource,
-      json,
-      method,
-    });
     return {
       error: {
         status: response.status,

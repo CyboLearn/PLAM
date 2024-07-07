@@ -1,5 +1,8 @@
+import { getItemsInStorage } from "@/actions/media/get-items-in-storage";
 import { generatePageMeta } from "@/app/seo/generate";
-import { Heading } from "@/components/ui/heading";
+import { ListItemsInStorage } from "@/components/storage/list";
+import { UploadForm } from "@/components/storage/upload";
+import { PageHeading } from "@/components/ui/page-heading";
 
 export const metadata = generatePageMeta({
 	title: "Storage",
@@ -7,10 +10,18 @@ export const metadata = generatePageMeta({
 	url: "/storage",
 });
 
-export default function Storage() {
+export default async function Storage() {
+	const { data, userId } = await getItemsInStorage();
+
 	return (
 		<main>
-			<Heading>Storage</Heading>
+			<PageHeading
+				title="Storage"
+				description="Storage for your Personal Large Action Model."
+			>
+				<UploadForm />
+			</PageHeading>
+			<ListItemsInStorage data={data} userId={userId} />
 		</main>
 	);
 }

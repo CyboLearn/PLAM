@@ -18,13 +18,12 @@ import {
 import {
 	Sidebar,
 	SidebarBody,
+	SidebarDivider,
 	SidebarFooter,
 	SidebarHeader,
-	SidebarHeading,
 	SidebarItem,
 	SidebarLabel,
-	SidebarSection,
-	SidebarSpacer,
+	SidebarSection
 } from "@/components/ui/sidebar";
 import { SidebarLayout } from "@/components/ui/sidebar-layout";
 import { useAuth } from "@/utils/auth/AuthProvider";
@@ -35,6 +34,7 @@ import {
 	LightBulbIcon,
 	ShieldCheckIcon,
 	UserIcon,
+	ChevronDownIcon,
 } from "@heroicons/react/16/solid";
 import {
 	Cog6ToothIcon,
@@ -46,6 +46,28 @@ import {
 	CircleStackIcon,
 } from "@heroicons/react/20/solid";
 import { usePathname } from "next/navigation";
+
+import { ActionHistorySidebar } from "@/components/navigation/ActionHistorySidebar";
+
+function PLAMServiceSelection() {
+	return (
+		<DropdownMenu className="min-w-80 lg:min-w-64" anchor="bottom start">
+			<DropdownItem>
+				<Avatar className="bg-orange-400 text-zinc-950" initials="AI" />
+				<DropdownLabel>PLAM</DropdownLabel>
+			</DropdownItem>
+			<DropdownItem>
+				<Avatar slot="icon" initials="S" className="bg-fuchsia-500" />
+				<DropdownLabel>PLAM for Social Media</DropdownLabel>
+			</DropdownItem>
+			<DropdownDivider />
+			<DropdownItem href="/settings">
+				<Cog8ToothIcon />
+				<DropdownLabel>Settings</DropdownLabel>
+			</DropdownItem>
+		</DropdownMenu>
+	);
+}
 
 export function NavigationProvider({
 	children,
@@ -95,12 +117,12 @@ export function NavigationProvider({
 								</DropdownItem>
 								<DropdownDivider />
 								{authStatus === "authenticated" ? (
-									<DropdownItem href="/auth/logout">
+									<DropdownItem href="/sign-out">
 										<ArrowRightStartOnRectangleIcon />
 										<DropdownLabel>Sign out</DropdownLabel>
 									</DropdownItem>
 								) : (
-									<DropdownItem href="/auth">
+									<DropdownItem href="/sign-in">
 										<ArrowRightStartOnRectangleIcon />
 										<DropdownLabel>Sign in</DropdownLabel>
 									</DropdownItem>
@@ -113,18 +135,21 @@ export function NavigationProvider({
 			sidebar={
 				<Sidebar>
 					<SidebarHeader>
-						<SidebarItem className="lg:mb-2.5">
-							<Avatar className="bg-orange-400 text-zinc-950" initials="AI" />
-							<SidebarLabel>PLAM</SidebarLabel>
-						</SidebarItem>
+						<Dropdown>
+							<DropdownButton as={SidebarItem} className="lg:mb-2.5">
+								<Avatar className="bg-orange-400 text-zinc-950" initials="AI" />
+								<SidebarLabel>PLAM</SidebarLabel>
+								<ChevronDownIcon />
+							</DropdownButton>
+							<PLAMServiceSelection />
+						</Dropdown>
 						<SidebarSection className="max-lg:hidden">
 							<SidebarItem>
 								<MagnifyingGlassIcon />
 								<SidebarLabel>Search</SidebarLabel>
 							</SidebarItem>
 						</SidebarSection>
-					</SidebarHeader>
-					<SidebarBody>
+						<SidebarDivider />
 						<SidebarSection>
 							<SidebarItem href="/chat" current={pathname === "/chat"}>
 								<ChatBubbleLeftIcon />
@@ -143,21 +168,9 @@ export function NavigationProvider({
 								<SidebarLabel>Settings</SidebarLabel>
 							</SidebarItem>
 						</SidebarSection>
-						<SidebarSection className="max-lg:hidden">
-							<SidebarHeading>Action History</SidebarHeading>
-							<SidebarItem href="/chat/123">Weather in London</SidebarItem>
-						</SidebarSection>
-						<SidebarSpacer />
-						<SidebarSection>
-							<SidebarItem href="/support">
-								<QuestionMarkCircleIcon />
-								<SidebarLabel>Support</SidebarLabel>
-							</SidebarItem>
-							<SidebarItem href="/changelog">
-								<SparklesIcon />
-								<SidebarLabel>Changelog</SidebarLabel>
-							</SidebarItem>
-						</SidebarSection>
+					</SidebarHeader>
+					<SidebarBody>
+						<ActionHistorySidebar />
 					</SidebarBody>
 					<SidebarFooter className="max-lg:hidden">
 						<Dropdown>
@@ -190,6 +203,14 @@ export function NavigationProvider({
 									<DropdownLabel>Settings</DropdownLabel>
 								</DropdownItem>
 								<DropdownDivider />
+								<DropdownItem href="/support">
+									<QuestionMarkCircleIcon />
+									<DropdownLabel>Support</DropdownLabel>
+								</DropdownItem>
+								<DropdownItem href="/changelog">
+									<SparklesIcon />
+									<DropdownLabel>Changelog</DropdownLabel>
+								</DropdownItem>
 								<DropdownItem href="/privacy">
 									<ShieldCheckIcon />
 									<DropdownLabel>Privacy policy</DropdownLabel>
@@ -200,12 +221,12 @@ export function NavigationProvider({
 								</DropdownItem>
 								<DropdownDivider />
 								{authStatus === "authenticated" ? (
-									<DropdownItem href="/auth/logout">
+									<DropdownItem href="/sign-out">
 										<ArrowRightStartOnRectangleIcon />
 										<DropdownLabel>Sign out</DropdownLabel>
 									</DropdownItem>
 								) : (
-									<DropdownItem href="/auth">
+									<DropdownItem href="/sign-in">
 										<ArrowRightStartOnRectangleIcon />
 										<DropdownLabel>Sign in</DropdownLabel>
 									</DropdownItem>
