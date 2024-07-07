@@ -77,6 +77,3 @@ as permissive
 for delete
 to public
 using (((bucket_id = 'media'::text) AND (( SELECT (auth.uid())::text AS uid) = (storage.foldername(name))[1])));
-
-
-
