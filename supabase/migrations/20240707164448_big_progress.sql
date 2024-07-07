@@ -46,7 +46,10 @@ for select
 to public
 using ((( SELECT auth.uid() AS uid) = user_id));
 
-
+insert into storage.buckets
+  (id, name, public)
+values
+  ('media', 'media', false);
 
 create policy "Give users access to own folder 1ps738_0"
 on "storage"."objects"
