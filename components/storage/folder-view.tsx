@@ -1,6 +1,6 @@
 "use client";
 
-import type { StorageItem } from "@/actions/media/get-items-in-storage";
+import type { StorageItem } from "@/actions/media/get-item-from-storage";
 import { Strong, Text, TextLink } from "@/components/ui/text";
 import {
 	Dropdown,
@@ -60,7 +60,7 @@ export function FolderView({
 		// download item
 		const { data, error } = await supabase.storage
 			.from("media")
-			.download(`${userId}/${folder}/${fileName}`);
+			.download(`${userId}/${folder}/${fileName}`.replaceAll("//", "/"));
 
 		if (error) {
 			console.error(error);
@@ -146,7 +146,7 @@ export function FolderView({
 							// folder
 							<Link
 								key={item.name}
-								href={`/storage/${folder}/${item?.name}`}
+								href={`/storage/${folder}/${item?.name}`.replaceAll("//", "/")}
 								className="p-4 rounded-lg border border-zinc-950/10 dark:border-white/10 flex flex-row items-center"
 							>
 								<Text className="!text-sm">
@@ -164,7 +164,7 @@ export function FolderView({
 						>
 							<div className="flex flex-col">
 								<Text className="!text-sm">
-									<TextLink href={`/storage/${folder}/${item.name}`}>
+									<TextLink href={`/storage/${folder}/${item.name}`.replaceAll("//", "/")}>
 										<Strong>{item.name}</Strong>
 									</TextLink>
 								</Text>
