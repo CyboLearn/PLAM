@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { FileError } from "./file-error";
 import type { MediaType } from "@/utils/media/getMediaType";
+import { Strong, Text } from "../ui/text";
 
 export function FilePreview({
 	fileUrl = "",
@@ -50,6 +51,12 @@ export function FilePreview({
 				</audio>
 			);
 		default:
-			return <FileError error={new Error("File type not supported.")} />;
+			return (
+				<div className="w-full flex justify-center items-center aspect-square border border-zinc-950/10 dark:border-white/10 rounded-lg">
+					<Text>
+						<Strong>File type not supported.</Strong>
+					</Text>
+				</div>
+			);
 	}
 }

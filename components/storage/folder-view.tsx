@@ -46,7 +46,7 @@ export function FolderView({
 		// delete item
 		const { error } = await supabase.storage
 			.from("media")
-			.remove([`${userId}/${fileName}`]);
+			.remove([`${userId}/${folder}/${fileName}`]);
 
 		if (error) {
 			console.error(error);
@@ -60,7 +60,7 @@ export function FolderView({
 		// download item
 		const { data, error } = await supabase.storage
 			.from("media")
-			.download(`${userId}/${fileName}`);
+			.download(`${userId}/${folder}/${fileName}`);
 
 		if (error) {
 			console.error(error);
@@ -93,7 +93,10 @@ export function FolderView({
 		// rename item
 		const { error } = await supabase.storage
 			.from("media")
-			.move(`${userId}/${fileName}`, `${userId}/${newFileName}`);
+			.move(
+				`${userId}/${decodeURIComponent(folder)}/${fileName}`,
+				`${userId}/${decodeURIComponent(folder)}/${newFileName}`,
+			);
 
 		if (error) {
 			console.error(error);

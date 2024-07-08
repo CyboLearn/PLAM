@@ -20,7 +20,7 @@ export function FileComponent({
 
 	return (
 		<main className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-			<div className="flex flex-col gap-y-1 justify-center items-center w-fit">
+			<div className="flex flex-col gap-y-1 justify-center items-center w-full">
 				<FilePreview
 					fileUrl={fileUrl}
 					filetype={filetype}

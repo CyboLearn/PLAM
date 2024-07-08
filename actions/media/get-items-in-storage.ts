@@ -46,7 +46,7 @@ export async function getItemsInStorage(folder?: string) {
 
 	const { data, error } = await supabase.storage
 		.from("media")
-		.list(`${user.id}${searchInFolder}`);
+		.list(`${user.id}${decodeURIComponent(searchInFolder)}`);
 
 	return {
 		userId: user.id,
