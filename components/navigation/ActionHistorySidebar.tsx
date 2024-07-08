@@ -6,6 +6,7 @@ import {
 	SidebarHeading,
 	SidebarItem,
 	SidebarSection,
+	SidebarSpacer,
 } from "@/components/ui/sidebar";
 import { isToday, isYesterday, subDays, isWithinInterval } from "date-fns";
 import { Text } from "@/components/ui/text";
@@ -103,24 +104,34 @@ export function ActionHistorySidebar() {
 		}
 	}, [pathname, hasDoneInitialLoad]);
 
+	const categoryOrder = ["Today", "Yesterday", "Previous 7 Days", "Older"];
+
 	return (
 		<SidebarSection className="max-lg:hidden">
 			{status === "success" &&
 				history &&
-				Object.entries(history).map(([category, actions]) => (
-					<SidebarSection key={category}>
-						<SidebarHeading>{category}</SidebarHeading>
-						{actions.map((action: ActionHistory) => (
-							<SidebarItem
-								key={action.chat_id}
-								href={`/chat/${action.chat_id}/${action.chat_title.toLowerCase().split(" ").join("-")}`}
-								current={pathname === `/chat/${action.chat_id}/${action.chat_title.toLowerCase().split(" ").join("-")}`}
-							>
-								{action.chat_title}
-							</SidebarItem>
-						))}
-					</SidebarSection>
-				))}
+				Object.entries(history)
+					.sort(
+						([a], [b]) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b),
+					)
+					.map(([category, actions]) => (
+						<SidebarSection key={category}>
+							<SidebarHeading>{category}</SidebarHeading>
+							{actions.map((action: ActionHistory) => (
+								<SidebarItem
+									key={action.chat_id}
+									href={`/chat/${action.chat_id}/${action.chat_title.toLowerCase().split(" ").join("-")}`}
+									current={
+										pathname ===
+										`/chat/${action.chat_id}/${action.chat_title.toLowerCase().split(" ").join("-")}`
+									}
+								>
+									{action.chat_title}
+								</SidebarItem>
+							))}
+							<SidebarSpacer className="!mt-2" />
+						</SidebarSection>
+					))}
 			{status === "loading" && (
 				<SidebarSection>
 					<SidebarItem>
