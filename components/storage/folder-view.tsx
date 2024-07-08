@@ -22,19 +22,25 @@ import {
 } from "@/components/ui/dialog";
 import { Field, Label } from "@/components/ui/fieldset";
 import { Button } from "@/components/ui/button";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { Link } from "@/components/ui/link";
 
-export function ListItemsInStorage({
+export function FolderView({
 	data,
 	userId,
+	folder = "",
 }: {
 	readonly data: StorageItem[] | null;
 	readonly userId: string | null;
+	readonly folder?: string;
 }) {
 	const [renameFileDialog, setRenameFileDialog] = useState(false);
 	const [fileToRename, setFileToRename] = useState<string>("");
 	const [newFileName, setNewFileName] = useState<string>("");
 	const supabase = createClient();
 	const router = useRouter();
+
+	const folderData = data?.filter((item) => !item.name.endsWith(".plam"));
 
 	const deleteItem = async (fileName: string) => {
 		// delete item
@@ -131,47 +137,65 @@ export function ListItemsInStorage({
 				</DialogActions>
 			</Dialog>
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-				{data?.map((item) => (
-					<div
-						key={item.id}
-						className="p-4 rounded-lg border border-zinc-950/10 dark:border-white/10 flex flex-row"
-					>
-						<div className="flex flex-col">
-							<Text className="!text-sm">
-								<TextLink href={`/storage/${item.name}`}>
-									<Strong>{item.name}</Strong>
-								</TextLink>
-							</Text>
-							<Text className="!text-xs">{item.metadata.mimetype}</Text>
+				{folderData?.map((item) => {
+					if (!item?.metadata?.mimetype) {
+						return (
+							// folder
+							<Link
+								key={item.name}
+								href={`/storage/${folder}/${item?.name}`}
+								className="p-4 rounded-lg border border-zinc-950/10 dark:border-white/10 flex flex-row items-center"
+							>
+								<Text className="!text-sm">
+									<Strong>{item?.name}</Strong>
+								</Text>
+								<ChevronRightIcon className="!size-5 ml-auto" />
+							</Link>
+						);
+					}
+
+					return (
+						<div
+							key={item.id}
+							className="p-4 rounded-lg border border-zinc-950/10 dark:border-white/10 flex flex-row"
+						>
+							<div className="flex flex-col">
+								<Text className="!text-sm">
+									<TextLink href={`/storage/${folder}/${item.name}`}>
+										<Strong>{item.name}</Strong>
+									</TextLink>
+								</Text>
+								<Text className="!text-xs">{item.metadata.mimetype}</Text>
+							</div>
+							<div className="flex flex-col ml-auto">
+								<Dropdown>
+									<DropdownButton outline>
+										Options
+										<ChevronDownIcon />
+									</DropdownButton>
+									<DropdownMenu>
+										<DropdownItem
+											onClick={() => {
+												setFileToRename(item.name);
+												setNewFileName(item.name);
+												setRenameFileDialog(true);
+											}}
+										>
+											Rename
+										</DropdownItem>
+										<DropdownItem onClick={() => downloadItem(item.name)}>
+											Download
+										</DropdownItem>
+										<DropdownItem onClick={() => deleteItem(item.name)}>
+											Delete
+										</DropdownItem>
+									</DropdownMenu>
+								</Dropdown>
+							</div>
 						</div>
-						<div className="flex flex-col ml-auto">
-							<Dropdown>
-								<DropdownButton outline>
-									Options
-									<ChevronDownIcon />
-								</DropdownButton>
-								<DropdownMenu>
-									<DropdownItem
-										onClick={() => {
-											setFileToRename(item.name);
-											setNewFileName(item.name);
-											setRenameFileDialog(true);
-										}}
-									>
-										Rename
-									</DropdownItem>
-									<DropdownItem onClick={() => downloadItem(item.name)}>
-										Download
-									</DropdownItem>
-									<DropdownItem onClick={() => deleteItem(item.name)}>
-										Delete
-									</DropdownItem>
-								</DropdownMenu>
-							</Dropdown>
-						</div>
-					</div>
-				))}
-				{data?.length === 0 && (
+					);
+				})}
+				{folderData?.length === 0 && (
 					<div className="p-4 rounded-lg text-center border-zinc-950/10 dark:border-white/10 col-span-full">
 						<Text className="!text-sm">No items found.</Text>
 					</div>

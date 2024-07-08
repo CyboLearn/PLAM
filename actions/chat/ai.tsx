@@ -28,10 +28,33 @@ export interface ClientMessage {
 	display: ReactNode;
 }
 
-export async function converse(input: string): Promise<ClientMessage> {
+export interface ChangesToAIState {
+	chatTitle?: string;
+	privacy?: "Private" | "Public";
+}
+
+export async function converse(
+	input: string,
+	changes: ChangesToAIState,
+): Promise<ClientMessage> {
 	"use server";
 
 	const aiState = getMutableAIState();
+
+	if (input === "") {
+		if (Object.keys(changes).length > 0) {
+			aiState.done({
+				...aiState.get(),
+				...changes,
+			});
+		}
+
+		return {
+			id: generateId(),
+			role: "assistant",
+			display: "Changes made.",
+		};
+	}
 
 	aiState.update({
 		...aiState.get(),
@@ -114,6 +137,8 @@ export async function converse(input: string): Promise<ClientMessage> {
 export type AIState = {
 	chatId: string;
 	history: ServerMessage[];
+	chatTitle?: string;
+	privacy?: "Private" | "Public";
 };
 
 export const AIProvider = createAI<AIState, ClientMessage[]>({
@@ -136,13 +161,27 @@ export const AIProvider = createAI<AIState, ClientMessage[]>({
 			throw new Error("Failed to authenticate");
 		}
 
-		const { chatId, history } = state;
+		const {
+			chatId,
+			history,
+			chatTitle = "New Chat",
+			privacy = "private",
+		} = state;
 
-		console.warn("AI State set called", chatId);
+		const changes = {
+			chat_id: chatId,
+			chat: history,
+			user_id: user?.id,
+			chat_title: chatTitle,
+			privacy: privacy,
+		};
 
-		await supabase
-			.from("chats")
-			.upsert({ chat_id: chatId, chat: history, user_id: user?.id });
+		/**useful for debugging:
+		 
+		console.warn("Setting AI state", changes);
+		*/
+
+		await supabase.from("chats").upsert(changes);
 	},
 	onGetUIState: async () => {
 		"use server";

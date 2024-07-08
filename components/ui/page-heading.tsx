@@ -9,7 +9,7 @@ export function PageHeading({
 	description = "",
 	children,
 }: {
-	readonly title: string;
+	readonly title: string | React.ReactNode;
 	readonly description: string;
 	readonly children?: React.ReactNode;
 }) {

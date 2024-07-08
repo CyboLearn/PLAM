@@ -7,11 +7,13 @@ import { Button } from "../ui/button";
 export function FileError({
 	error,
 }: {
-	readonly error: Error;
+	readonly error: Error | string;
 }) {
+	const errorMessage = error instanceof Error ? error.message : error;
+
 	return (
 		<div>
-			<Subheading>Error: {error.message}</Subheading>
+			<Subheading>Error: {errorMessage}</Subheading>
 			<Text>
 				We’ve encountered an error while trying to fetch the file—it may no
 				longer exist.

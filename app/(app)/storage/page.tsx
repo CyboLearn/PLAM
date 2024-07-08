@@ -1,6 +1,6 @@
 import { getItemsInStorage } from "@/actions/media/get-items-in-storage";
 import { generatePageMeta } from "@/app/seo/generate";
-import { ListItemsInStorage } from "@/components/storage/list";
+import { FolderView } from "@/components/storage/folder-view";
 import { UploadForm } from "@/components/storage/upload";
 import { PageHeading } from "@/components/ui/page-heading";
 
@@ -21,7 +21,7 @@ export default async function Storage() {
 			>
 				<UploadForm />
 			</PageHeading>
-			<ListItemsInStorage data={data} userId={userId} />
+			<FolderView data={data} userId={userId} />
 		</main>
 	);
 }

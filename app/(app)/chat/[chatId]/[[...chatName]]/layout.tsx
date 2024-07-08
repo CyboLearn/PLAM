@@ -10,16 +10,21 @@ export const metadata = generatePageMeta({
 	url: "/chat",
 });
 
-export default async function SavedChatPage({
-	params: { chatId = null },
+export default async function SavedChatPage({ // NOSONAR
+	params: { chatId = null, chatName = null },
 	children,
 }: {
-	readonly params: { readonly chatId: string[] | null };
+	readonly params: {
+		readonly chatId: string[] | null;
+		readonly chatName: string[] | null;
+	};
 	readonly children: React.ReactNode;
 }) {
 	const supabase = createClient();
 
 	let id = chatId?.toString() ?? null;
+	let chatTitle = "New Chat";
+	let privacy = "Private" as "Private" | "Public";
 
 	if (id === null) {
 		const { chatId: newChatId, error } = await getChatId();
@@ -46,7 +51,7 @@ export default async function SavedChatPage({
 	if (chatId) {
 		const { data, error } = await supabase
 			.from("chats")
-			.select("chat")
+			.select("chat, chat_title, privacy")
 			.eq("chat_id", id)
 			.single();
 
@@ -56,13 +61,24 @@ export default async function SavedChatPage({
 
 		if (data) {
 			history = data?.chat ?? [];
+			chatTitle = data?.chat_title ?? "New Chat";
+			privacy = data?.privacy ?? "Private";
+		}
+
+		if (!chatName || chatName.join("") !== chatTitle.toLowerCase().split(" ").join("-")) {
+			return redirect(`/chat/${id}/${chatTitle.toLowerCase().split(" ").join("-")}`);
 		}
 	}
 
 	return (
 		<main>
 			<AIProvider
-				initialAIState={{ history: history, chatId: id }}
+				initialAIState={{
+					history: history,
+					chatId: id,
+					privacy: privacy,
+					chatTitle: chatTitle,
+				}}
 				initialUIState={[]}
 			>
 				{children}

@@ -28,7 +28,7 @@ export default function AuthLoginPage() {
 	>("idle");
 
 	if (authStatus === "authenticated") {
-		return redirect("/chat");
+		return redirect("/dashboard");
 	}
 
 	return (

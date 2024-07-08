@@ -23,7 +23,7 @@ import {
 	SidebarHeader,
 	SidebarItem,
 	SidebarLabel,
-	SidebarSection
+	SidebarSection,
 } from "@/components/ui/sidebar";
 import { SidebarLayout } from "@/components/ui/sidebar-layout";
 import { useAuth } from "@/utils/auth/AuthProvider";
@@ -44,6 +44,7 @@ import {
 	QuestionMarkCircleIcon,
 	SparklesIcon,
 	CircleStackIcon,
+	HomeIcon,
 } from "@heroicons/react/20/solid";
 import { usePathname } from "next/navigation";
 
@@ -151,11 +152,18 @@ export function NavigationProvider({
 						</SidebarSection>
 						<SidebarDivider />
 						<SidebarSection>
+							<SidebarItem
+								href="/dashboard"
+								current={pathname === "/dashboard"}
+							>
+								<HomeIcon />
+								<SidebarLabel>Dashboard</SidebarLabel>
+							</SidebarItem>
 							<SidebarItem href="/chat" current={pathname === "/chat"}>
 								<ChatBubbleLeftIcon />
 								<SidebarLabel>New Chat</SidebarLabel>
 							</SidebarItem>
-							<SidebarItem href="/tools" current={pathname === "/tools"}>
+							<SidebarItem href="/services" current={pathname === "/services"}>
 								<WrenchScrewdriverIcon />
 								<SidebarLabel>Tools & Services</SidebarLabel>
 							</SidebarItem>

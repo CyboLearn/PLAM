@@ -29,8 +29,7 @@ export function FileComponent({
 			</div>
 			<div>
 				<Text>
-					This is a preview of the file you selected. You can download it by
-					clicking the download button below.
+					This is a preview of the file you selected.
 				</Text>
 			</div>
 		</main>

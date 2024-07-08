@@ -19,8 +19,9 @@ export interface StorageItem {
 	};
 }
 
-export async function getItemsInStorage() {
+export async function getItemsInStorage(folder?: string) {
 	const supabase = createClient();
+	const searchInFolder = folder ? `/${folder}/` : "";
 
 	const {
 		data: { user },
@@ -45,7 +46,7 @@ export async function getItemsInStorage() {
 
 	const { data, error } = await supabase.storage
 		.from("media")
-		.list(`${user.id}`);
+		.list(`${user.id}${searchInFolder}`);
 
 	return {
 		userId: user.id,

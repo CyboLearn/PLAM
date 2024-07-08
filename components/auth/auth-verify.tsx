@@ -31,7 +31,7 @@ export default function AuthVerifyPage() {
 	}
 
 	if (authStatus === "authenticated") {
-		return redirect("/chat");
+		return redirect("/dashboard");
 	}
 
 	return (
@@ -64,7 +64,7 @@ export default function AuthVerifyPage() {
 								}
 
 								setSubmissionState("success");
-								window.location.href = "/chat"; // force page reload to update auth status
+								window.location.href = "/dashboard"; // force page reload to update auth status
 								return resolve(true);
 							}, 500);
 						}),

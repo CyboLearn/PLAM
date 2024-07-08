@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sidebar";
 import { isToday, isYesterday, subDays, isWithinInterval } from "date-fns";
 import { Text } from "@/components/ui/text";
+import { usePathname } from "next/navigation";
 
 interface ActionHistory {
 	chat_id: string;
@@ -22,6 +23,7 @@ interface GroupedActionHistory {
 
 export function ActionHistorySidebar() {
 	const [history, setHistory] = useState<GroupedActionHistory | null>(null);
+	const pathname = usePathname();
 	const [status, setStatus] = useState<"loading" | "error" | "success">(
 		"loading",
 	);
@@ -29,6 +31,8 @@ export function ActionHistorySidebar() {
 	useEffect(() => {
 		async function fetchData() {
 			try {
+				setStatus("loading");
+				
 				const response = await getActionHistory();
 				if (response.error) {
 					setStatus("error");
@@ -72,6 +76,14 @@ export function ActionHistorySidebar() {
 					{},
 				);
 
+				for (const category of Object.keys(groupedHistory)) {
+					groupedHistory[category].sort(
+						(a, b) =>
+							new Date(b.created_at).getTime() -
+							new Date(a.created_at).getTime(),
+					);
+				}
+
 				setHistory(groupedHistory);
 			} catch (error) {
 				console.error("Failed to fetch action history:", error);
@@ -79,8 +91,10 @@ export function ActionHistorySidebar() {
 			}
 		}
 
-		fetchData();
-	}, []);
+		if (pathname) fetchData();
+	}, [
+		pathname
+	]);
 
 	return (
 		<SidebarSection className="max-lg:hidden">
@@ -93,6 +107,7 @@ export function ActionHistorySidebar() {
 							<SidebarItem
 								key={action.chat_id}
 								href={`/chat/${action.chat_id}`}
+								current={pathname === `/chat/${action.chat_id}`}
 							>
 								{action.chat_title}
 							</SidebarItem>
