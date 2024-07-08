@@ -150,14 +150,9 @@ export function FolderView({
 								className="p-4 rounded-lg border border-zinc-950/10 dark:border-white/10 flex flex-row items-center"
 							>
 								<Text className="!text-sm">
-									<TextLink
-										href={`/storage/${folder}/${item?.name}`.replaceAll(
-											"//",
-											"/",
-										)}
-									>
-										<Strong>{item?.name}</Strong>
-									</TextLink>
+									<Strong className="text-zinc-950 underline decoration-zinc-950/50 data-[hover]:decoration-zinc-950 dark:text-white dark:decoration-white/50 dark:data-[hover]:decoration-white">
+										{item?.name}
+									</Strong>
 								</Text>
 								<ChevronRightIcon className="!size-5 ml-auto" />
 							</Link>

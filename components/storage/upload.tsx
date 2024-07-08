@@ -25,11 +25,7 @@ export function UploadButtons({
 }) {
 	return (
 		<>
-			{uploadOnClick && (
-				<Button color="dark/white" onClick={uploadOnClick}>
-					Upload File
-				</Button>
-			)}
+			{uploadOnClick && <Button onClick={uploadOnClick}>Upload File</Button>}
 			{createOnClick && <Button onClick={createOnClick}>Create Folder</Button>}
 			{deleteOnClick && (
 				<Button color="red" onClick={deleteOnClick}>
