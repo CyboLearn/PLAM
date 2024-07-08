@@ -105,7 +105,7 @@ export function ServiceViewer({
 			})}
 			{services?.length === 0 && (
 				<div className="p-4 rounded-lg text-center border-zinc-950/10 dark:border-white/10 col-span-full">
-					<Text className="!text-sm">No items found.</Text>
+					<Text className="!text-sm">No services found.</Text>
 				</div>
 			)}
 		</div>
