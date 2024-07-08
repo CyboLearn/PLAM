@@ -23,7 +23,7 @@ async function getItemDetails(
 ) {
 	const { data: itemDetails, error: itemError } = await supabase.storage
 		.from("media")
-		.list(`${userId}${folder}`, {
+		.list(`${userId}${decodeURIComponent(folder)}`, {
 			search: isFile ? decodeURIComponent(justTheFileName) : undefined,
 		});
 

@@ -43,6 +43,7 @@ import {
 	MagnifyingGlassIcon,
 	QuestionMarkCircleIcon,
 	SparklesIcon,
+	BoltIcon,
 	CircleStackIcon,
 	HomeIcon,
 } from "@heroicons/react/20/solid";
@@ -56,10 +57,6 @@ function PLAMServiceSelection() {
 			<DropdownItem>
 				<Avatar className="bg-orange-400 text-zinc-950" initials="AI" />
 				<DropdownLabel>PLAM</DropdownLabel>
-			</DropdownItem>
-			<DropdownItem>
-				<Avatar slot="icon" initials="S" className="bg-fuchsia-500" />
-				<DropdownLabel>PLAM for Social Media</DropdownLabel>
 			</DropdownItem>
 			<DropdownDivider />
 			<DropdownItem href="/settings">
@@ -163,13 +160,17 @@ export function NavigationProvider({
 								<ChatBubbleLeftIcon />
 								<SidebarLabel>New Chat</SidebarLabel>
 							</SidebarItem>
-							<SidebarItem href="/services" current={pathname === "/services"}>
-								<WrenchScrewdriverIcon />
-								<SidebarLabel>Tools & Services</SidebarLabel>
+							<SidebarItem href="/studio" current={pathname === "/studio"}>
+								<BoltIcon />
+								<SidebarLabel>Studio</SidebarLabel>
 							</SidebarItem>
 							<SidebarItem href="/storage" current={pathname === "/storage"}>
 								<CircleStackIcon />
 								<SidebarLabel>Storage</SidebarLabel>
+							</SidebarItem>
+							<SidebarItem href="/services" current={pathname === "/services"}>
+								<WrenchScrewdriverIcon />
+								<SidebarLabel>Services</SidebarLabel>
 							</SidebarItem>
 							<SidebarItem href="/settings" current={pathname === "/settings"}>
 								<Cog6ToothIcon />

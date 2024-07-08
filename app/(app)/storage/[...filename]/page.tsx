@@ -29,7 +29,7 @@ export async function generateMetadata({
 	}
 
 	return generatePageMeta({
-		title: folderName ?? data?.name,
+		title: decodeURIComponent(folderName ?? data?.name ?? "Storage"),
 		description: "Storage for your Personal Large Action Model.",
 		url: `/storage/${filename}`,
 	});

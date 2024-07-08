@@ -10,24 +10,50 @@ export type UserRoleType =
 	| "Moderator"
 	| "Owner";
 
-export async function getAvailableServices() {
+export interface EnabledServices {
+	service_id: string;
+	is_enabled: boolean;
+};
+
+export interface Service {
+	service_id: string;
+	created_at: string;
+	service_name: string;
+	service_slug: string;
+	description: string;
+	service_state: string;
+}
+
+export async function getAvailableServices(): Promise<{
+	data: {
+		services: Service[] | null;
+		enabledServices: EnabledServices[] | null;
+	};
+	error: string | null;
+}> {
 	const supabase = createClient();
 
 	const { data: userData, error: userError } = await supabase
 		.from("users")
-		.select("role")
+		.select("user_id, role")
 		.maybeSingle();
 
 	if (userError) {
 		return {
-			data: null,
+			data: {
+				services: null,
+				enabledServices: null,
+			},
 			error: userError.message,
 		};
 	}
 
 	if (!userData) {
 		return {
-			data: null,
+			data: {
+				services: null,
+				enabledServices: null,
+			},
 			error: "User not found.",
 		};
 	}
@@ -39,11 +65,14 @@ export async function getAvailableServices() {
 
 	const { data: servicesData, error } = await supabase
 		.from("services")
-		.select("*");
+		.select("service_id, created_at, service_name, service_slug, description, service_state");
 
 	if (error) {
 		return {
-			data: null,
+			data: {
+				services: null,
+				enabledServices: null,
+			},
 			error: error.message,
 		};
 	}
@@ -68,8 +97,35 @@ export async function getAvailableServices() {
 		return false;
 	});
 
+	let enabledServices: EnabledServices[] = [];
+
+	const { data: enabledServicesData, error: enabledServicesError } = await supabase
+		.from("enabled_services")
+		.select("service_id, is_enabled")
+		.eq("user_id", userData.user_id);
+
+	if (enabledServicesError) {
+		return {
+			data: {
+				services: null,
+				enabledServices: null,
+			},
+			error: enabledServicesError.message,
+		};
+	}
+
+	enabledServices = enabledServicesData.map((service) => {
+		return {
+			service_id: service.service_id,
+			is_enabled: service.is_enabled,
+		} as EnabledServices;
+	});
+
 	return {
-		data: services,
+		data: {
+			services,
+			enabledServices: enabledServices,
+		},
 		error: null,
 	};
 }
