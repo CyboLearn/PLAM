@@ -22,6 +22,7 @@ interface GroupedActionHistory {
 }
 
 export function ActionHistorySidebar() {
+	const [hasDoneInitialLoad, setHasDoneInitialLoad] = useState(false);
 	const [history, setHistory] = useState<GroupedActionHistory | null>(null);
 	const pathname = usePathname();
 	const [status, setStatus] = useState<"loading" | "error" | "success">(
@@ -32,7 +33,7 @@ export function ActionHistorySidebar() {
 		async function fetchData() {
 			try {
 				setStatus("loading");
-				
+
 				const response = await getActionHistory();
 				if (response.error) {
 					setStatus("error");
@@ -91,10 +92,16 @@ export function ActionHistorySidebar() {
 			}
 		}
 
-		if (pathname) fetchData();
-	}, [
-		pathname
-	]);
+		if (pathname.startsWith("/chat")) {
+			fetchData();
+			setHasDoneInitialLoad(true);
+		}
+
+		if (!hasDoneInitialLoad) {
+			fetchData();
+			setHasDoneInitialLoad(true);
+		}
+	}, [pathname, hasDoneInitialLoad]);
 
 	return (
 		<SidebarSection className="max-lg:hidden">
@@ -106,8 +113,8 @@ export function ActionHistorySidebar() {
 						{actions.map((action: ActionHistory) => (
 							<SidebarItem
 								key={action.chat_id}
-								href={`/chat/${action.chat_id}`}
-								current={pathname === `/chat/${action.chat_id}`}
+								href={`/chat/${action.chat_id}/${action.chat_title.toLowerCase().split(" ").join("-")}`}
+								current={pathname === `/chat/${action.chat_id}/${action.chat_title.toLowerCase().split(" ").join("-")}`}
 							>
 								{action.chat_title}
 							</SidebarItem>

@@ -164,7 +164,10 @@ export function NavigationProvider({
 								<BoltIcon />
 								<SidebarLabel>Studio</SidebarLabel>
 							</SidebarItem>
-							<SidebarItem href="/storage" current={pathname === "/storage"}>
+							<SidebarItem
+								href="/storage"
+								current={pathname.startsWith("/storage")}
+							>
 								<CircleStackIcon />
 								<SidebarLabel>Storage</SidebarLabel>
 							</SidebarItem>

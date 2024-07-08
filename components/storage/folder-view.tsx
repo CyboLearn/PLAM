@@ -150,7 +150,14 @@ export function FolderView({
 								className="p-4 rounded-lg border border-zinc-950/10 dark:border-white/10 flex flex-row items-center"
 							>
 								<Text className="!text-sm">
-									<Strong>{item?.name}</Strong>
+									<TextLink
+										href={`/storage/${folder}/${item?.name}`.replaceAll(
+											"//",
+											"/",
+										)}
+									>
+										<Strong>{item?.name}</Strong>
+									</TextLink>
 								</Text>
 								<ChevronRightIcon className="!size-5 ml-auto" />
 							</Link>
@@ -164,7 +171,12 @@ export function FolderView({
 						>
 							<div className="flex flex-col">
 								<Text className="!text-sm">
-									<TextLink href={`/storage/${folder}/${item.name}`.replaceAll("//", "/")}>
+									<TextLink
+										href={`/storage/${folder}/${item.name}`.replaceAll(
+											"//",
+											"/",
+										)}
+									>
 										<Strong>{item.name}</Strong>
 									</TextLink>
 								</Text>
