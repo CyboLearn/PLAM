@@ -40,7 +40,10 @@ export function FolderView({
 	const supabase = createClient();
 	const router = useRouter();
 
-	const folderData = data?.filter((item) => !item.name.endsWith(".plam"));
+	const folderData = data?.filter(
+		(item) =>
+			!item.name.endsWith(".plam") || item.name !== ".emptyFolderPlaceholder",
+	);
 
 	const deleteItem = async (fileName: string) => {
 		// delete item

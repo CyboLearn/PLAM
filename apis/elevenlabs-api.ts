@@ -27,24 +27,24 @@ export type ElevenLabsApiEndpoints =
 
 export async function makeElevenLabsApiRequest({
 	endpoint,
-  method = "GET",
-  body
+	method = "GET",
+	body,
 }: {
-	readonly endpoint: string;
-  readonly method: "GET" | "POST" | "DELETE";
-  readonly body?: any;
+	readonly endpoint: ElevenLabsApiEndpoints;
+	readonly method: "GET" | "POST" | "DELETE";
+	readonly body?: any;
 }) {
 	const url = `https://api.elevenlabs.io/v1/${endpoint}`;
 
 	// Make the request
 	const response = await fetch(url, {
-    method,
-    headers: {
+		method,
+		headers: {
 			"xi-api-key": `${process.env.ELEVENLABS_API_KEY}`,
-      "Content-Type": "application/json",
+			"Content-Type": "application/json",
 		},
-    body: JSON.stringify(body)
-  });
+		body: JSON.stringify(body),
+	});
 
 	// Check for errors
 	if (!response.ok) {
