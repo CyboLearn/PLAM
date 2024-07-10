@@ -3,7 +3,6 @@ import { AIProvider, type ServerMessage } from "@/actions/chat/ai";
 import { createClient } from "@/utils/supabase/server";
 import { ChatError } from "@/components/chat/ChatError";
 import { getChatId } from "@/actions/chat/get-chat-id";
-import { redirect } from "next/navigation";
 
 export const metadata = generatePageMeta({
 	title: "Chat",
@@ -11,12 +10,11 @@ export const metadata = generatePageMeta({
 });
 
 export default async function SavedChatPage({ // NOSONAR
-	params: { chatId = null, chatName = null },
+	params: { chatId = null },
 	children,
 }: {
 	readonly params: {
 		readonly chatId: string[] | null;
-		readonly chatName: string[] | null;
 	};
 	readonly children: React.ReactNode;
 }) {
@@ -34,10 +32,6 @@ export default async function SavedChatPage({ // NOSONAR
 		}
 
 		id = newChatId;
-	}
-
-	if (!chatId && id) {
-		return redirect(`/chat/${id}`);
 	}
 
 	let history: ServerMessage[] = [
@@ -63,10 +57,6 @@ export default async function SavedChatPage({ // NOSONAR
 			history = data?.chat ?? [];
 			chatTitle = data?.chat_title ?? "New Chat";
 			privacy = data?.privacy ?? "Private";
-		}
-
-		if (!chatName || chatName.join("") !== chatTitle.toLowerCase().split(" ").join("-")) {
-			return redirect(`/chat/${id}/${chatTitle.toLowerCase().split(" ").join("-")}`);
 		}
 	}
 

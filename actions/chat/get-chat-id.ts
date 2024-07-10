@@ -46,7 +46,7 @@ export async function getChatId() {
 		if (data) {
 			chatId = uuid();
 		} else {
-			const { error } = await supabase
+			/**const { error } = await supabase
 				.from("chats")
 				.insert([{ chat_id: chatId, user_id: user.id }]);
 
@@ -55,7 +55,7 @@ export async function getChatId() {
           chatId: null,
           error: error.message
         }
-      }
+      }*/
 
 			break;
 		}

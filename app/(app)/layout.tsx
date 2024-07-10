@@ -1,4 +1,5 @@
 import { NavigationProvider } from "@/components/navigation/NavigationProvider";
+import Triggers from "@/utils/triggers/triggers";
 
 export default function AppLayout({
 	children,
@@ -6,8 +7,8 @@ export default function AppLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<NavigationProvider>
-			{children}
-		</NavigationProvider>
+		<Triggers>
+			<NavigationProvider>{children}</NavigationProvider>
+		</Triggers>
 	);
 }

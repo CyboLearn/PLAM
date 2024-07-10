@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { ClientMessage } from "@/actions/chat/ai";
 import { useActions, useAIState, useUIState } from "ai/rsc";
 import { Button } from "@/components/ui/button";
@@ -33,10 +33,12 @@ import { Radio, RadioField, RadioGroup } from "@/components/ui/radio";
 import { Text } from "@/components/ui/text";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { useRefreshTrigger } from "@/utils/triggers/trigger-refresh";
 
 export default function ChatPanel() {
 	const supabase = createClient();
 	const router = useRouter();
+	const { triggerRefresh } = useRefreshTrigger();
 	const [input, setInput] = useState("");
 	const bottomOfChatRef = useRef<HTMLDivElement>(null);
 	const topOfChatRef = useRef<HTMLDivElement>(null);
@@ -55,12 +57,14 @@ export default function ChatPanel() {
 	const [changePrivacyDialog, setChangePrivacyDialog] = useState(false);
 	const [deleteChatDialog, setDeleteChatDialog] = useState(false);
 
+	const [userHasSentMessage, setUserHasSentMessage] = useState(false);
+
 	const changeChatTitle = async (title: string) => {
 		setChatTitle(title);
 		await converse("", {
 			chatTitle: title,
 		});
-		router.push(`/chat/${chatId}/${title.toLowerCase().split(" ").join("-")}`); // redirect to new chat URL
+		triggerRefresh();
 	};
 
 	const changePrivacy = async (privacy: "Private" | "Public") => {
@@ -68,16 +72,19 @@ export default function ChatPanel() {
 		await converse("", {
 			privacy: privacy,
 		});
+		triggerRefresh();
 	};
 
 	const deleteChat = async () => {
 		router.prefetch("/dashboard");
 		await supabase.from("chats").delete().eq("chat_id", chatId);
+		triggerRefresh();
 		router.push("/dashboard");
 	};
 
 	const handleSubmission = async () => {
 		setInput("");
+		triggerRefresh();
 		setConversation((currentConversation: any) => [
 			...currentConversation,
 			{
@@ -86,6 +93,7 @@ export default function ChatPanel() {
 				display: input,
 			},
 		]);
+		setUserHasSentMessage(true);
 
 		const response = await converse(input);
 		setConversation((currentConversation: any) => [
@@ -97,6 +105,15 @@ export default function ChatPanel() {
 	const scrollToBottom = () => {
 		bottomOfChatRef.current?.scrollIntoView({ behavior: "smooth" });
 	};
+
+	useEffect(() => {
+		if (!userHasSentMessage) return;
+
+		if (router && chatId) {
+			router.replace(`/chat/${chatId}`);
+			triggerRefresh();
+		}
+	}, [chatId, router, userHasSentMessage, triggerRefresh]);
 
 	return (
 		<>

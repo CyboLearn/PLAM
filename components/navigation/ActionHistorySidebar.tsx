@@ -11,6 +11,7 @@ import {
 import { isToday, isYesterday, subDays, isWithinInterval } from "date-fns";
 import { Text } from "@/components/ui/text";
 import { usePathname } from "next/navigation";
+import { useRefreshTrigger } from "@/utils/triggers/trigger-refresh";
 
 interface ActionHistory {
 	chat_id: string;
@@ -23,12 +24,12 @@ interface GroupedActionHistory {
 }
 
 export function ActionHistorySidebar() {
-	const [hasDoneInitialLoad, setHasDoneInitialLoad] = useState(false);
 	const [history, setHistory] = useState<GroupedActionHistory | null>(null);
 	const pathname = usePathname();
 	const [status, setStatus] = useState<"loading" | "error" | "success">(
 		"loading",
 	);
+	const { trigger } = useRefreshTrigger();
 
 	useEffect(() => {
 		async function fetchData() {
@@ -62,7 +63,10 @@ export function ActionHistorySidebar() {
 						} else if (isYesterday(actionDate)) {
 							category = "Yesterday";
 						} else if (
-							isWithinInterval(actionDate, { start: last7Days, end: yesterday })
+							isWithinInterval(actionDate, {
+								start: last7Days,
+								end: yesterday,
+							})
 						) {
 							category = "Previous 7 Days";
 						}
@@ -93,45 +97,42 @@ export function ActionHistorySidebar() {
 			}
 		}
 
-		if (pathname.startsWith("/chat")) {
+		if (trigger) {
 			fetchData();
-			setHasDoneInitialLoad(true);
 		}
 
-		if (!hasDoneInitialLoad) {
-			fetchData();
-			setHasDoneInitialLoad(true);
-		}
-	}, [pathname, hasDoneInitialLoad]);
+		fetchData();
+	}, [trigger]);
 
 	const categoryOrder = ["Today", "Yesterday", "Previous 7 Days", "Older"];
 
+	// TODO: Add a nice animation for when a new chat is updated
+
 	return (
 		<SidebarSection className="max-lg:hidden">
-			{status === "success" &&
-				history &&
-				Object.entries(history)
-					.sort(
-						([a], [b]) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b),
-					)
-					.map(([category, actions]) => (
-						<SidebarSection key={category}>
-							<SidebarHeading>{category}</SidebarHeading>
-							{actions.map((action: ActionHistory) => (
-								<SidebarItem
-									key={action.chat_id}
-									href={`/chat/${action.chat_id}/${action.chat_title.toLowerCase().split(" ").join("-")}`}
-									current={
-										pathname ===
-										`/chat/${action.chat_id}/${action.chat_title.toLowerCase().split(" ").join("-")}`
-									}
-								>
-									{action.chat_title}
-								</SidebarItem>
-							))}
-							<SidebarSpacer className="!mt-2" />
-						</SidebarSection>
-					))}
+			<SidebarSection>
+				{status === "success" &&
+					history &&
+					Object.entries(history)
+						.sort(
+							([a], [b]) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b),
+						)
+						.map(([category, actions]) => (
+							<div key={category}>
+								<SidebarHeading>{category}</SidebarHeading>
+								{actions.map((action: ActionHistory) => (
+									<SidebarItem
+										key={action.chat_id}
+										href={`/chat/${action.chat_id}`}
+										current={pathname === `/chat/${action.chat_id}`}
+									>
+										{action.chat_title}
+									</SidebarItem>
+								))}
+								<SidebarSpacer className="!mt-2" />
+							</div>
+						))}
+			</SidebarSection>
 			{status === "loading" && (
 				<SidebarSection>
 					<SidebarItem>
