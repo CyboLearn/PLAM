@@ -3,38 +3,69 @@
 import { Subheading } from "./heading";
 import { Link } from "./link";
 import { Text } from "./text";
-import { Button } from "./button";
 import clsx from "clsx";
 
 export function Card({
-  title = "",
-  description = "",
-  href = "",
-  ...props
+	title = "",
+	description = "",
+	href = "",
+	cta = undefined,
+	children,
+	...props
 }: {
-  readonly title: string;
-  readonly description: string;
-  readonly href: string;
-  readonly className?: string;
+	readonly title: string;
+	readonly description: string;
+	readonly href?: string;
+	readonly cta?: string;
+	readonly children?: React.ReactNode;
+	readonly className?: string;
 }): JSX.Element {
-  return (
-    <Link
-      href={href}
-      className={clsx(
-        "flex flex-row bg-zinc-800 px-4 py-6 border border-zinc-700 rounded-lg",
-        props?.className
-      )}
-      {...props}
-    >
-      <div className="flex flex-col">
-        <Subheading>{title}</Subheading>
-        <Text>{description}</Text>
-      </div>
-      <div className="ml-auto flex flex-col justify-center">
-        <Button href={href}>
-          View Course
-        </Button>
-      </div>
-    </Link>
-  );
+	if (!href) {
+		return (
+			<div
+				className={clsx(
+					"flex flex-col lg:flex-row bg-zinc-100 dark:bg-zinc-800 px-4 py-6 border border-zinc-200 dark:border-zinc-700 rounded-lg gap-4",
+					props?.className,
+				)}
+				{...props}
+			>
+				<div className="flex flex-col">
+					<Subheading level={4}>{title}</Subheading>
+					<Text>{description}</Text>
+				</div>
+				<div className="lg:ml-auto flex flex-col justify-center w-fit">
+					{children}
+				</div>
+			</div>
+		);
+	}
+
+	return (
+		<Link
+			href={href}
+			className={clsx(
+				"flex flex-col lg:flex-row bg-zinc-100 dark:bg-zinc-800 px-4 py-6 border border-zinc-200 dark:border-zinc-700 rounded-lg gap-4",
+				props?.className,
+			)}
+			{...props}
+		>
+			<div className="flex flex-col">
+				<Subheading level={4}>{title}</Subheading>
+				<Text>{description}</Text>
+			</div>
+			<div className="lg:ml-auto flex flex-col justify-center w-fit">
+				{children}
+			</div>
+		</Link>
+	);
+}
+
+export function CardGroup({
+	children,
+}: {
+	readonly children: React.ReactNode;
+}): JSX.Element {
+	return (
+		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
+	);
 }

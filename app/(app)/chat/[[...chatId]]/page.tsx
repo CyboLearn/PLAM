@@ -226,7 +226,7 @@ export default function ChatPanel() {
 				</DialogActions>
 			</Dialog>
 			<div className="flex flex-col h-full">
-				<div className="w-full max-w-6xl p-2 bg-zinc-50 dark:bg-zinc-950 rounded-b-xl fixed top-0 flex flex-row justify-between gap-x-2 px-3">
+				<div className="w-full max-w-6xl p-2 bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950 border border-zinc-950/5 dark:border-white/10 rounded-b-xl fixed top-0 flex flex-row justify-between gap-x-2 px-3">
 					<div className="flex flex-row justify-center items-center gap-2">
 						<Button
 							plain
@@ -279,7 +279,7 @@ export default function ChatPanel() {
 										key={message.id}
 										className="ml-auto w-full flex flex-col gap-y-1.5 items-end max-w-xl"
 									>
-										<Markdown className="rounded-t-lg rounded-bl-lg bg-zinc-50/80 dark:bg-zinc-950/80 px-4 py-2 prose dark:prose-invert prose-zinc">
+										<Markdown className="rounded-t-lg rounded-bl-lg bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950 px-4 py-2 prose dark:prose-invert prose-zinc shadow-sm ring-1 ring-zinc-950/5 dark:ring-white/10">
 											{message.display as string}
 										</Markdown>
 										<Avatar
@@ -296,7 +296,7 @@ export default function ChatPanel() {
 									key={message.id}
 									className="mr-auto w-full flex flex-col gap-y-1.5 items-start max-w-xl"
 								>
-									<div className="min-h-10 rounded-t-lg rounded-br-lg bg-zinc-50/80 dark:bg-zinc-950/80 px-4 py-2">
+									<div className="min-h-10 rounded-t-lg rounded-br-lg bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950 px-4 py-2 prose dark:prose-invert prose-zinc shadow-sm ring-1 ring-zinc-950/5 dark:ring-white/10">
 										<div>{message.display}</div>
 									</div>
 									<Avatar
@@ -311,7 +311,7 @@ export default function ChatPanel() {
 					</div>
 				</div>
 
-				<div className="w-full max-w-6xl p-2 bg-zinc-50 dark:bg-zinc-950 rounded-t-xl fixed bottom-0">
+				<div className="w-full max-w-6xl p-2 bg-zinc-100 dark:bg-zinc-900 dark:lg:bg-zinc-950 border border-zinc-950/5 dark:border-white/10 rounded-t-xl fixed bottom-0">
 					<div className="flex flex-row gap-2">
 						<Input
 							value={input}
