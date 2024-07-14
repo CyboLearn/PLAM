@@ -24,7 +24,7 @@ export const rootOpenGraph: OpenGraph = {
 	siteName: site.name,
 	title: {
 		default: site.title,
-		template: "%s - ",
+		template: "%s - PLAM",
 	},
 	description: site.description,
 };
