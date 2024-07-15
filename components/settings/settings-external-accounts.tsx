@@ -19,7 +19,7 @@ interface Connection {
 	cta?: string;
 }
 
-export function SocialMediaAccounts({
+export function ExternalAccountsAndConnections({
 	connections,
 }: {
 	readonly connections: Connection[];
@@ -74,8 +74,8 @@ export function SocialMediaAccounts({
 	return (
 		<div>
 			<PageSubheading
-				title="Social Media Accounts"
-				description="Connect your social media accounts to allow PLAM to do things on your behalf."
+				title="External Accounts & Connections"
+				description="Connect your social media and work accounts to allow PLAM to do things on your behalf."
 			/>
 			<CardGroup>
 				{connections.map((connection) => {

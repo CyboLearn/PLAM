@@ -1,4 +1,5 @@
 import { generatePageMeta } from "@/app/seo/generate";
+import { Button } from "@/components/ui/button";
 
 import NoiseImage from "@/images/noise.png";
 
@@ -11,16 +12,16 @@ export const metadata = generatePageMeta({
 
 export default function Homepage() {
 	return (
-		<main className="relative bg-zinc-950 min-h-screen px-8">
+		<main className="relative isolate overflow-hidden bg-zinc-950 min-h-screen px-8">
 			<div
-				className="absolute inset-0 z-10 opacity-10"
+				className="absolute inset-0 z-10 opacity-10 pointer-events-none"
 				style={{
 					backgroundImage: `url("${NoiseImage.src}")`,
 				}}
 			/>
 			<svg
 				aria-hidden="true"
-				className="absolute inset-0 z-10 h-full w-full stroke-white/10 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
+				className="absolute inset-0 z-10 h-full w-full stroke-white/10 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)] pointer-events-none"
 			>
 				<defs>
 					<pattern
@@ -50,7 +51,7 @@ export default function Homepage() {
 			</svg>
 			<div
 				aria-hidden="true"
-				className="absolute left-[calc(50%-4rem)] top-10 z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
+				className="absolute left-[calc(50%-4rem)] top-10 z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)] pointer-events-none"
 			>
 				<div
 					style={{
@@ -74,6 +75,14 @@ export default function Homepage() {
 					<p className="text-zinc-50 mt-3 text-xl font-thin">
 						A Personal Large Action Model built to assist you with everything.
 					</p>
+					<div className="flex flex-row gap-x-4 mt-5">
+						<Button color="white" href="/sign-in">
+							Automate now
+						</Button>
+						<Button href="/about" color="dark/zinc">
+							Learn more &rarr;
+						</Button>
+					</div>
 				</div>
 				<div />
 			</section>

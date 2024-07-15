@@ -1,6 +1,6 @@
 import { getSocialMediaAccounts } from "@/actions/social-media/get-accounts";
 import { generatePageMeta } from "@/app/seo/generate";
-import { SocialMediaAccounts } from "@/components/settings/settings-social-media";
+import { ExternalAccountsAndConnections } from "@/components/settings/settings-external-accounts";
 import { PageHeading } from "@/components/ui/page-heading";
 
 export const metadata = generatePageMeta({
@@ -36,7 +36,7 @@ export default async function SettingsPage() {
 				description="Manage your account settings"
 			/>
 			<div className="flex flex-col gap-y-6">
-				<SocialMediaAccounts connections={possibleConnections} />
+				<ExternalAccountsAndConnections connections={possibleConnections} />
 			</div>
 		</main>
 	);
