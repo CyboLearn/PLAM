@@ -79,7 +79,7 @@ export default function Homepage() {
 						<Button color="white" href="/sign-in">
 							Automate now
 						</Button>
-						<Button href="/about" color="dark/zinc">
+						<Button href="/about" color="dark">
 							Learn more &rarr;
 						</Button>
 					</div>
