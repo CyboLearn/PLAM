@@ -12,7 +12,7 @@ export const metadata = generatePageMeta({
 
 export default function Homepage() {
 	return (
-		<main className="relative isolate overflow-hidden bg-zinc-950 min-h-screen px-8 lg:px-32">
+		<main className="relative isolate overflow-hidden bg-zinc-950 min-h-screen px-8 lg:px-32 dark">
 			<div
 				className="absolute inset-0 z-10 opacity-10 pointer-events-none"
 				style={{
