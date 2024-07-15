@@ -42,14 +42,14 @@ export function FolderView({
 
 	const folderData = data?.filter(
 		(item) =>
-			!item.name.endsWith(".plam") || item.name !== ".emptyFolderPlaceholder",
+			!item.name.endsWith(".plam") && item.name !== ".emptyFolderPlaceholder",
 	);
 
 	const deleteItem = async (fileName: string) => {
 		// delete item
 		const { error } = await supabase.storage
 			.from("media")
-			.remove([`${userId}/${folder}/${fileName}`]);
+			.remove([`${userId}/${folder}/${fileName}`.replaceAll("//", "/")]);
 
 		if (error) {
 			console.error(error);
@@ -97,8 +97,14 @@ export function FolderView({
 		const { error } = await supabase.storage
 			.from("media")
 			.move(
-				`${userId}/${decodeURIComponent(folder)}/${fileName}`,
-				`${userId}/${decodeURIComponent(folder)}/${newFileName}`,
+				`${userId}/${decodeURIComponent(folder)}/${fileName}`.replaceAll(
+					"//",
+					"/",
+				),
+				`${userId}/${decodeURIComponent(folder)}/${newFileName}`.replaceAll(
+					"//",
+					"/",
+				),
 			);
 
 		if (error) {

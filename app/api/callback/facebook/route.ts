@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 			(identity) => identity.provider === "facebook"
 		)?.id ?? null;
 
-		const { error: tokenError } = await supa.from("social_accounts").upsert(
+		const { error: tokenError } = await supa.from("external_accounts").upsert(
 			{
 				user_id: userId,
 				access_token: providerToken,

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-import { linkAccount } from "@/actions/social-media/link-account";
+import { linkAccount } from "@/actions/external-accounts/link-account";
 
 export async function POST(req: NextRequest) {
 	const { platform } = await req.json();

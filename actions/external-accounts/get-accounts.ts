@@ -14,7 +14,7 @@ export async function getSocialMediaAccounts(): Promise<{
 	const supabase = createClient();
 
 	const { data, error } = await supabase
-		.from("social_accounts")
+		.from("external_accounts")
 		.select("external_account_id,platform");
 
 	if (error) {

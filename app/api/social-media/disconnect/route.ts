@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 	}
 
 	const { error } = await supabase
-		.from("social_accounts")
+		.from("external_accounts")
 		.delete()
 		.eq("platform", platform);
 

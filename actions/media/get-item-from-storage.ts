@@ -52,11 +52,11 @@ async function getSignedUrl(
 export async function getItemFromStorage({
 	filename,
 }: {
-	readonly filename: string[];
+	readonly filename: string;
 }) {
 	const supabase = createClient();
 
-	const folderFileNameSplit = filename.join("/").split("/");
+	const folderFileNameSplit = filename.split("/");
 	const fileName = folderFileNameSplit[folderFileNameSplit.length - 1];
 	const isFile = fileName.includes(".");
 

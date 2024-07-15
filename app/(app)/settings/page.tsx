@@ -1,4 +1,4 @@
-import { getSocialMediaAccounts } from "@/actions/social-media/get-accounts";
+import { getSocialMediaAccounts } from "@/actions/external-accounts/get-accounts";
 import { generatePageMeta } from "@/app/seo/generate";
 import { ExternalAccountsAndConnections } from "@/components/settings/settings-external-accounts";
 import { PageHeading } from "@/components/ui/page-heading";

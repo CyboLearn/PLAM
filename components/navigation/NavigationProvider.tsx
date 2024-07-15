@@ -46,10 +46,13 @@ import {
 	BoltIcon,
 	CircleStackIcon,
 	HomeIcon,
+	MoonIcon,
+	SunIcon,
 } from "@heroicons/react/20/solid";
 import { usePathname } from "next/navigation";
 
 import { ActionHistorySidebar } from "@/components/navigation/ActionHistorySidebar";
+import { useTheme } from "next-themes";
 
 function PLAMServiceSelection() {
 	return (
@@ -73,7 +76,12 @@ export function NavigationProvider({
 	readonly children: React.ReactNode;
 }): JSX.Element {
 	const { data, authStatus } = useAuth();
+	const { resolvedTheme, setTheme } = useTheme();
 	const pathname = usePathname();
+
+	const toggleTheme = () => {
+		setTheme(resolvedTheme === "dark" ? "light" : "dark");
+	};
 
 	return (
 		<SidebarLayout
@@ -196,19 +204,19 @@ export function NavigationProvider({
 									/>
 									<span className="min-w-0">
 										<span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">
-											{data?.name ?? "Anonymous"}
+											{data?.name ?? "Someone"}
 										</span>
 										<span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
-											{data?.email ?? "anonymous@plam.app"}
+											{data?.email ?? "anonymous"}
 										</span>
 									</span>
 								</span>
 								<ChevronUpIcon />
 							</DropdownButton>
 							<DropdownMenu className="min-w-64" anchor="top start">
-								<DropdownItem href="/profile">
-									<UserIcon />
-									<DropdownLabel>My profile</DropdownLabel>
+								<DropdownItem onClick={toggleTheme}>
+									{resolvedTheme === "dark" ? <MoonIcon /> : <SunIcon />}
+									<DropdownLabel>Toggle theme</DropdownLabel>
 								</DropdownItem>
 								<DropdownItem href="/settings">
 									<Cog8ToothIcon />

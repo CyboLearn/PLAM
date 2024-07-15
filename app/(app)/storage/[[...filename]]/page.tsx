@@ -20,7 +20,7 @@ export async function generateMetadata({
 	};
 }) {
 	if (filename) {
-		const { data, type } = await getItemFromStorage({ filename: filename });
+		const { data, type } = await getItemFromStorage({ filename: filename.join("/") });
 		let folderName = null;
 
 		if (type === "folder") {
@@ -51,7 +51,7 @@ export default async function FilePage({
 	};
 }) {
 	const { data, type, error } = await getItemFromStorage({
-		filename: filename ?? [],
+		filename: filename?.join("/") ?? "",
 	});
 
 	let folder = {
