@@ -61,11 +61,15 @@ export function Card({
 }
 
 export function CardGroup({
+	className = "",
 	children,
 }: {
+	readonly className?: string;
 	readonly children: React.ReactNode;
 }): JSX.Element {
 	return (
-		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
+		<div className={clsx("grid grid-cols-1 gap-4 sm:grid-cols-2", className)}>
+			{children}
+		</div>
 	);
 }
