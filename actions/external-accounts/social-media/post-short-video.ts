@@ -9,22 +9,22 @@ type Platform = "youtube" | "instagram" | "tiktok" | "facebook";
 
 export interface YouTubeShortVideoMetadata {
 	title?: string;
-	caption?: string;
+	description?: string;
 }
 
 export interface InstagramShortVideoMetadata {
 	title?: string;
-	caption?: string;
+	description?: string;
 }
 
 export interface FacebookShortVideoMetadata {
 	title?: string;
-	caption?: string;
+	description?: string;
 }
 export interface ShortVideoMetadata {
 	// General metadata
 	title?: string;
-	caption?: string;
+	description?: string;
 	// Platform-specific overrides
 	youtube?: YouTubeShortVideoMetadata;
 	instagram?: InstagramShortVideoMetadata;
@@ -100,7 +100,7 @@ export async function postShortVideo({
 				)) ?? "",
 			videoUrl: videoUrl,
 			title: metadata?.title ?? "My Short Video",
-			caption: metadata?.caption ?? "Check out my short video!",
+			description: metadata?.description ?? "Check out my short video!",
 		});
 	}
 

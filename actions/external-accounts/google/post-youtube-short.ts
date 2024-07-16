@@ -8,14 +8,14 @@ import { makeGoogleApiRequest } from "@/apis/google-api";
  * @param accessToken - The user's Google access token.
  * @param videoUrl - The URL of the video to post.
  * @param title - The title of the video.
- * @param caption - The caption of the video.
+ * @param description - The description of the video.
  *
  */
 export async function postYouTubeShort({
 	accessToken,
 	videoUrl,
 	title,
-	caption,
+	description,
 	privacyStatus = "private",
 	madeForKids = false,
 	license = "youtube",
@@ -28,7 +28,7 @@ export async function postYouTubeShort({
 	readonly accessToken: string;
 	readonly videoUrl: string;
 	readonly title: string;
-	readonly caption: string;
+	readonly description: string;
 	readonly privacyStatus?: "private" | "public" | "unlisted";
 	readonly madeForKids?: boolean;
 	readonly license?: "youtube" | "creativeCommon";
@@ -40,11 +40,11 @@ export async function postYouTubeShort({
 }) {
 	const response = await fetch(videoUrl);
 
-	// Check that the video's caption OR title contains the hashtag `#Shorts`.
-	// If it doesn't, append it to the caption and not to the title.
+	// Check that the video's description OR title contains the hashtag `#Shorts`.
+	// If it doesn't, append it to the description and not to the title.
 	const hashtag = "#Shorts";
-	if (!title.includes(hashtag) && !caption.includes(hashtag)) {
-		caption += ` ${hashtag}`;
+	if (!title.includes(hashtag) && !description.includes(hashtag)) {
+		description += ` ${hashtag}`;
 	}
 
 	const { data: googleResponse, error: googleError } =
@@ -59,7 +59,7 @@ export async function postYouTubeShort({
 			json: {
 				snippet: {
 					title,
-					description: caption,
+					description: description,
 					tags,
 					categoryId,
 					defaultLanguage,

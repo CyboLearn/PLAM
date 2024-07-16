@@ -28,13 +28,13 @@ export async function createPost() {
 export async function postToInstagramReels({
   instagramUserId,
   videoUrl,
-  caption,
+  description,
   thumbnailOffset = 0,
   shareToFeed = true,
 }: {
   readonly instagramUserId: string;
   readonly videoUrl: string;
-  readonly caption: string;
+  readonly description: string;
   readonly thumbnailOffset?: number;
   readonly shareToFeed?: boolean;
 }) {

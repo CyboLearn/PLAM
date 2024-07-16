@@ -39,7 +39,7 @@ export function FileComponent({
 									video: filename,
 									metadata: {
 										title: "My video title",
-										caption: "My video caption - #Shorts",
+										description: "My video description - #Shorts",
 									},
 								});
 							}}
@@ -55,7 +55,7 @@ export function FileComponent({
 									video: filename,
 									metadata: {
 										title: "My video title",
-										caption: "My video caption",
+										description: "My video description",
 									},
 								});
 							}}
@@ -71,7 +71,7 @@ export function FileComponent({
 									video: filename,
 									metadata: {
 										title: "My video title",
-										caption: "My video caption",
+										description: "My video description",
 									},
 								});
 							}}
