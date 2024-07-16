@@ -4,6 +4,8 @@ import { createClient } from "@/utils/supabase/server";
 import { postYouTubeShort } from "@/actions/external-accounts/google/post-youtube-short";
 import { getItemFromStorage } from "@/actions/media/get-item-from-storage";
 import { decrypt } from "@/utils/security/token";
+import { postFacebookReel } from "../facebook/post-facebook-reel";
+import { getFacebookPages } from "../facebook/get-facebook-pages";
 
 type Platform = "youtube" | "instagram" | "tiktok" | "facebook";
 
@@ -76,14 +78,34 @@ export async function postShortVideo({
 		};
 	}
 
+	const {data: facebookPages, error: getFacebookPagesError } = (
+		await getFacebookPages({
+			accessToken:
+				accounts.find((account) => account.platform === "facebook")
+					?.access_token ?? "",
+		})
+	)
+
+	if (getFacebookPagesError) {
+		return {
+			error: "An error occurred while fetching the Facebook pages.",
+			data: null,
+		};
+	}
+
 	let postToYouTube = undefined;
 	let postToInstagram = undefined;
 	let postToFacebook = undefined;
 
 	if (platforms.includes("facebook")) {
-		postToFacebook = async () => {
-			console.log("Posting to Facebook...");
-		};
+		postToFacebook = postFacebookReel({
+			pageId: facebookPages?.data?.[0]?.id ?? "",
+			pageToken: facebookPages?.data?.[0]?.access_token ?? "",
+			accessToken: accounts.find((account) => account.platform === "facebook")?.access_token ?? "",
+			videoUrl: videoUrl,
+			title: metadata?.title ?? "My Short Video",
+			description: metadata?.description ?? "Check out my short video!",
+		});
 	}
 
 	if (platforms.includes("instagram")) {
