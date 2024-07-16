@@ -1,7 +1,6 @@
 "use server";
 
 import { makeGoogleApiRequest } from "@/apis/google-api";
-import { getVideoDurationInSeconds } from "get-video-duration";
 
 /**
  * This function posts a video eligible for YouTube Shorts to the user's YouTube account.
@@ -41,16 +40,6 @@ export async function postYouTubeShort({
 }) {
 	const response = await fetch(videoUrl);
 
-	// Check that the video is less than 60 seconds long.
-  const duration = await getVideoDurationInSeconds(videoUrl);
-
-  if (duration > 60) {
-    return {
-      error: "The video must be less than 60 seconds long.",
-      data: null,
-    };
-  }
-
 	// Check that the video's caption OR title contains the hashtag `#Shorts`.
 	// If it doesn't, append it to the caption and not to the title.
 	const hashtag = "#Shorts";
@@ -63,6 +52,10 @@ export async function postYouTubeShort({
 			endpoint: "upload/youtube/v3",
 			resource: "videos",
 			accessToken,
+			query: {
+				part: "snippet,status",
+				notifySubscribers: "False",
+			},
 			json: {
 				snippet: {
 					title,
@@ -92,6 +85,6 @@ export async function postYouTubeShort({
 
 	return {
 		error: null,
-		data: await googleResponse.json(),
+		data: googleResponse,
 	};
 }

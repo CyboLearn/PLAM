@@ -16,6 +16,7 @@ export async function makeGoogleApiRequest({
 	json = {},
 	method = "GET",
 	file = null,
+	query = {},
 }: {
 	readonly endpoint: string;
 	readonly resource: string;
@@ -23,6 +24,7 @@ export async function makeGoogleApiRequest({
 	readonly json?: Record<string, unknown>;
 	readonly method?: "GET" | "POST" | "PUT" | "DELETE";
 	readonly file?: File | null;
+	readonly query?: Record<string, string>;
 }) {
 	const headers: { [key: string]: string } = {};
 
@@ -47,8 +49,10 @@ export async function makeGoogleApiRequest({
 		body = JSON.stringify(json);
 	}
 
+	const queryString = new URLSearchParams(query).toString();
+
 	const response = await fetch(
-		`https://www.googleapis.com/${endpoint}/${resource}`,
+		`https://www.googleapis.com/${endpoint}/${resource}?${queryString}`,
 		{
 			method,
 			headers,

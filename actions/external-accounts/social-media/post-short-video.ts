@@ -3,8 +3,33 @@
 import { createClient } from "@/utils/supabase/server";
 import { postYouTubeShort } from "@/actions/external-accounts/google/post-youtube-short";
 import { getItemFromStorage } from "@/actions/media/get-item-from-storage";
+import { decrypt } from "@/utils/security/token";
 
 type Platform = "youtube" | "instagram" | "tiktok" | "facebook";
+
+export interface YouTubeShortVideoMetadata {
+	title?: string;
+	caption?: string;
+}
+
+export interface InstagramShortVideoMetadata {
+	title?: string;
+	caption?: string;
+}
+
+export interface FacebookShortVideoMetadata {
+	title?: string;
+	caption?: string;
+}
+export interface ShortVideoMetadata {
+	// General metadata
+	title?: string;
+	caption?: string;
+	// Platform-specific overrides
+	youtube?: YouTubeShortVideoMetadata;
+	instagram?: InstagramShortVideoMetadata;
+	facebook?: FacebookShortVideoMetadata;
+}
 
 /**
  * This function posts a short video to the selected social media platforms.
@@ -16,11 +41,11 @@ type Platform = "youtube" | "instagram" | "tiktok" | "facebook";
  */
 export async function postShortVideo({
 	video,
-  metadata = {},
+	metadata = {},
 	platforms = [],
 }: {
 	readonly video: string;
-  readonly metadata?: any;
+	readonly metadata?: ShortVideoMetadata;
 	readonly platforms: Platform[];
 }) {
 	if (platforms.length === 0) {
@@ -67,11 +92,12 @@ export async function postShortVideo({
 		};
 	}
 	if (platforms.includes("youtube")) {
-		console.log("Posting to YouTube...");
-
 		postToYouTube = postYouTubeShort({
-			accessToken: accounts.find((account) => account.platform === "google")
-				?.access_token,
+			accessToken:
+				(await decrypt(
+					accounts.find((account) => account.platform === "google")
+						?.access_token ?? "",
+				)) ?? "",
 			videoUrl: videoUrl,
 			title: metadata?.title ?? "My Short Video",
 			caption: metadata?.caption ?? "Check out my short video!",

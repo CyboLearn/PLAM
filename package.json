@@ -25,7 +25,6 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.2.13",
-    "get-video-duration": "^4.1.0",
     "input-otp": "^1.2.4",
     "next": "15.0.0-rc.0",
     "next-crypto": "^1.0.8",
