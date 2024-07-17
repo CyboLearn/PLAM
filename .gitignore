@@ -38,3 +38,5 @@ next-env.d.ts
 old/
 
 .no-commit/
+# Million Lint
+.million

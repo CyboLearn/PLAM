@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev -p 3000 --turbo",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -13,11 +13,13 @@
     "@headlessui/react": "^0.0.0-insiders.a36380f",
     "@headlessui/tailwindcss": "^0.2.1",
     "@heroicons/react": "^2.1.4",
+    "@million/lint": "^1.0.0-rc.80",
     "@nivo/bar": "^0.87.0",
     "@nivo/core": "^0.87.0",
     "@nivo/line": "^0.87.0",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.44.2",
+    "@svgr/webpack": "^8.1.0",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.13",
     "@types/uuid": "^10.0.0",
