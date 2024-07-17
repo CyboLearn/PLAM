@@ -16,17 +16,13 @@ export async function GET(request: NextRequest) {
 
 		const {
 			error,
-			data: { session, user },
-		} = await supabase.auth.exchangeCodeForSession(code);
+			data: { user },
+		} = await supabase.auth.getUser();
 
-		const expiresIn = session?.expires_in ?? 0;
-		const providerToken = (await encrypt(session?.provider_token)) ?? null;
-		const providerRefreshToken =
-			(await encrypt(session?.provider_refresh_token)) ?? null;
-		const userId = session?.user?.id ?? null;
-		const externalAccountId =
-			user?.identities?.find((identity) => identity.provider === "facebook")
-				?.id ?? null;
+		const userId = user?.id;
+		const providerToken = await encrypt("");
+		const providerRefreshToken = await encrypt("");
+		const externalAccountId = "";
 
 		if (
 			!userId ||
@@ -40,9 +36,9 @@ export async function GET(request: NextRequest) {
 		const { error: tokenError } = await StoreToken({
 			userId,
 			providerToken,
-			expiresIn: expiresIn,
+			expiresIn: 86400,
 			externalAccountId,
-			platform: "facebook",
+			platform: "tiktok",
 			providerRefreshToken,
 		});
 

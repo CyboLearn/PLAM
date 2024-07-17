@@ -3,7 +3,8 @@
 import { createClient } from "@/utils/supabase/server";
 import type { UserIdentity } from "@supabase/supabase-js";
 
-export async function linkAccount({ // NOSONAR
+export async function linkAccount({
+	// NOSONAR
 	platform,
 }: {
 	readonly platform: "facebook" | "google";
@@ -19,28 +20,28 @@ export async function linkAccount({ // NOSONAR
 		};
 	}
 
-	if (platform === "facebook") {
-		const { identities = [] } = identityList;
+	const { identities = [] } = identityList;
 
-		if (identities?.find((identity) => identity.provider === platform)) {
-			const identity = identities.find(
-				(identity) => identity.provider === platform,
-			);
+	if (identities?.find((identity) => identity.provider === platform)) {
+		const identity = identities.find(
+			(identity) => identity.provider === platform,
+		);
 
-			const { error: unlinkError } = await supabase.auth.unlinkIdentity({
-				provider: platform,
-				user_id: identity?.user_id,
-				identity_id: identity?.identity_id,
-			} as UserIdentity);
+		const { error: unlinkError } = await supabase.auth.unlinkIdentity({
+			provider: platform,
+			user_id: identity?.user_id,
+			identity_id: identity?.identity_id,
+		} as UserIdentity);
 
-			if (unlinkError) {
-				return {
-					error: unlinkError.message,
-					redirectUrl: null,
-				};
-			}
+		if (unlinkError) {
+			return {
+				error: unlinkError.message,
+				redirectUrl: null,
+			};
 		}
+	}
 
+	if (platform === "facebook") {
 		const { data, error } = await supabase.auth.linkIdentity({
 			provider: platform,
 			options: {
@@ -72,8 +73,8 @@ export async function linkAccount({ // NOSONAR
 				redirectTo: `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://plam.app"}/api/callback/google`,
 				scopes: "https://www.googleapis.com/auth/youtube.upload",
 				queryParams: {
-					access_type: 'offline',
-					prompt: 'consent',
+					access_type: "offline",
+					prompt: "consent",
 				},
 			},
 		});
