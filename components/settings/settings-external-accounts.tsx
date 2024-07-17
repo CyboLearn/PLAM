@@ -95,18 +95,29 @@ export function ExternalAccountsAndConnections({
 							title={connection.name}
 							description={connection.description}
 						>
-							<Button
-								color={connection.connected ? "red" : "dark/white"}
-								disabled={!!disabledButtons[connection.id]}
-								onClick={onClick}
-							>
-								{disabledButtons[connection.id] === true ? "Loading" : cta}
-								{disabledButtons[connection.id] === true ? (
-									<ArrowPathIcon className="size-4 mr-2 animate-spin" />
-								) : (
-									CTAIcon
-								)}
-							</Button>
+							<div className="flex flex-col min-w-36 gap-y-1">
+								<Button
+									color={connection.connected ? "red" : "dark/white"}
+									disabled={!!disabledButtons[connection.id]}
+									onClick={onClick}
+								>
+									{disabledButtons[connection.id] === true ? "Loading" : cta}
+									{disabledButtons[connection.id] === true ? (
+										<ArrowPathIcon className="size-4 mr-2 animate-spin" />
+									) : (
+										CTAIcon
+									)}
+								</Button>
+								{/**<Button
+									disabled={!!disabledButtons[connection.id]}
+									onClick={async () => {
+										linkPlatform(connection.id);
+									}}
+									plain
+								>
+									connect another
+								</Button>*/}
+							</div>
 						</Card>
 					);
 				})}

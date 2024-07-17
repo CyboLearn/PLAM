@@ -1,7 +1,5 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
-
 export enum SupportedLanguagesForDubbing {
   en = "English",
   hi = "Hindi",
@@ -45,8 +43,6 @@ export async function dubAudioOrVideo({
 	readonly sourceLang?: SupportedLanguages;
   readonly targetLang?: SupportedLanguages;
 }) {
-  const supabase = createClient();
-
   if (sourceLang === targetLang) {
     return {
       status: "failed",

@@ -41,7 +41,7 @@ export interface ShortVideoMetadata {
  *
  * @returns Any errors and the data of the post.
  */
-export async function postShortVideo({
+export async function postShortVideo({ // NOSONAR
 	video,
 	metadata = {},
 	platforms = [],
@@ -78,13 +78,12 @@ export async function postShortVideo({
 		};
 	}
 
-	const {data: facebookPages, error: getFacebookPagesError } = (
+	const { data: facebookPages, error: getFacebookPagesError } =
 		await getFacebookPages({
 			accessToken:
 				accounts.find((account) => account.platform === "facebook")
 					?.access_token ?? "",
-		})
-	)
+		});
 
 	if (getFacebookPagesError) {
 		return {
@@ -101,7 +100,9 @@ export async function postShortVideo({
 		postToFacebook = postFacebookReel({
 			pageId: facebookPages?.data?.[0]?.id ?? "",
 			pageToken: facebookPages?.data?.[0]?.access_token ?? "",
-			accessToken: accounts.find((account) => account.platform === "facebook")?.access_token ?? "",
+			accessToken:
+				accounts.find((account) => account.platform === "facebook")
+					?.access_token ?? "",
 			videoUrl: videoUrl,
 			title: metadata?.title ?? "My Short Video",
 			description: metadata?.description ?? "Check out my short video!",

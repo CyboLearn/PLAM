@@ -1,7 +1,5 @@
 "use server";
 
-import { createClient } from "@/utils/supabase/server";
-
 export async function createPost() {
 	return {
 		post: null,
@@ -39,8 +37,6 @@ export async function postToInstagramReels({
   readonly shareToFeed?: boolean;
 }) {
   // make a check to ensure the video is within the specifications
-
-  const supabase = createClient();
 
   // select access_token
 

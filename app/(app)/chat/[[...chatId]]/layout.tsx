@@ -9,7 +9,7 @@ export const metadata = generatePageMeta({
 	url: "/chat",
 });
 
-export default async function SavedChatPage({ // NOSONAR
+export default async function SavedChatPage({
 	params: { chatId = null },
 	children,
 }: {

@@ -1,16 +1,16 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import type { UserIdentity } from "@supabase/supabase-js";
+
+export type SupportedPlatforms = "facebook" | "google" | "tiktok";
 
 export async function linkAccount({
-	// NOSONAR
 	platform,
 }: {
-	readonly platform: "facebook" | "google";
+	readonly platform: SupportedPlatforms;
 }) {
 	const supabase = createClient();
-	const { data: identityList, error: errorIdentities } =
+	/**const { data: identityList, error: errorIdentities } =
 		await supabase.auth.getUserIdentities();
 
 	if (errorIdentities) {
@@ -39,7 +39,7 @@ export async function linkAccount({
 				redirectUrl: null,
 			};
 		}
-	}
+	}*/
 
 	if (platform === "facebook") {
 		const { data, error } = await supabase.auth.linkIdentity({
