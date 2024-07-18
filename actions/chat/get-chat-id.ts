@@ -17,18 +17,18 @@ export async function getChatId() {
 	} = await supabase.auth.getUser();
 
 	if (userError) {
-    return {
-      chatId: null,
-      error: userError.message
-    }
-	} 
-  
-  if (!user) {
-    return {
-      chatId: null,
-      error: "User not found"
-    }
-  }
+		return {
+			chatId: null,
+			error: userError.message,
+		};
+	}
+
+	if (!user) {
+		return {
+			chatId: null,
+			error: "User not found",
+		};
+	}
 
 	let chatId = uuid();
 
@@ -63,6 +63,6 @@ export async function getChatId() {
 
 	return {
 		chatId: chatId,
-    error: null
+		error: null,
 	};
 }

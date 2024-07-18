@@ -13,7 +13,7 @@ export type UserRoleType =
 export interface EnabledServices {
 	service_id: string;
 	is_enabled: boolean;
-};
+}
 
 export interface Service {
 	service_id: string;
@@ -65,7 +65,9 @@ export async function getAvailableServices(): Promise<{
 
 	const { data: servicesData, error } = await supabase
 		.from("services")
-		.select("service_id, created_at, service_name, service_slug, description, service_state");
+		.select(
+			"service_id, created_at, service_name, service_slug, description, service_state",
+		);
 
 	if (error) {
 		return {
@@ -87,7 +89,9 @@ export async function getAvailableServices(): Promise<{
 		}
 
 		if (userData.role === "Moderator" || userData.role === "Tester") {
-			return service.service_state === "Active" || service.service_state === "Beta";
+			return (
+				service.service_state === "Active" || service.service_state === "Beta"
+			);
 		}
 
 		if (userData.role === "User") {
@@ -99,10 +103,11 @@ export async function getAvailableServices(): Promise<{
 
 	let enabledServices: EnabledServices[] = [];
 
-	const { data: enabledServicesData, error: enabledServicesError } = await supabase
-		.from("enabled_services")
-		.select("service_id, is_enabled")
-		.eq("user_id", userData.user_id);
+	const { data: enabledServicesData, error: enabledServicesError } =
+		await supabase
+			.from("enabled_services")
+			.select("service_id, is_enabled")
+			.eq("user_id", userData.user_id);
 
 	if (enabledServicesError) {
 		return {

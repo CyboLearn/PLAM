@@ -36,12 +36,12 @@ export async function toggleServiceForUser({
 		enabled: enabled,
 	});
 
-  if (error) {
-    return {
-      data: null,
-      error: error.message,
-    };
-  }
+	if (error) {
+		return {
+			data: null,
+			error: error.message,
+		};
+	}
 
 	return {
 		data: `Service ${enabled ? "enabled" : "disabled"}.`,

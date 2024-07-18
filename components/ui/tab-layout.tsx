@@ -19,7 +19,7 @@ export default function TabLayout({
 				{items.map((item) => (
 					<Tab
 						key={item.id}
-            disabled={item.children === null}
+						disabled={item.children === null}
 						className="rounded-full py-1 px-3 text-sm/6 font-semibold dark:text-white focus:outline-none data-[selected]:bg-black/5 data-[hover]:bg-black/2.5 data-[selected]:data-[hover]:bg-black/5 data-[focus]:outline-1 data-[focus]:outline-black dark:data-[selected]:bg-white/5 dark:data-[hover]:bg-white/2.5 dark:data-[selected]:data-[hover]:bg-white/5 dark:data-[focus]:outline-1 dark:data-[focus]:outline-white disabled:cursor-not-allowed disabled:opacity-50"
 					>
 						{item.name}

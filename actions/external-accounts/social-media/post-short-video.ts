@@ -41,7 +41,8 @@ export interface ShortVideoMetadata {
  *
  * @returns Any errors and the data of the post.
  */
-export async function postShortVideo({ // NOSONAR
+export async function postShortVideo({
+	// NOSONAR
 	video,
 	metadata = {},
 	platforms = [],

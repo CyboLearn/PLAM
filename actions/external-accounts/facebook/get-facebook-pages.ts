@@ -4,26 +4,26 @@ import { makeFacebookApiRequest } from "@/apis/facebook-api";
 import { decrypt } from "@/utils/security/token";
 
 export async function getFacebookPages({
-  accessToken
+	accessToken,
 }: {
-  readonly accessToken: string;
+	readonly accessToken: string;
 }) {
-  const { data, error } = await makeFacebookApiRequest({
-    endpoint: "me",
-    resource: "accounts",
-    accessToken: await decrypt(accessToken) ?? "",
-    method: "GET"
-  });
+	const { data, error } = await makeFacebookApiRequest({
+		endpoint: "me",
+		resource: "accounts",
+		accessToken: (await decrypt(accessToken)) ?? "",
+		method: "GET",
+	});
 
-  if (error) {
-    return {
-      error: error,
-      data: null
-    };
-  }
+	if (error) {
+		return {
+			error: error,
+			data: null,
+		};
+	}
 
-  return {
-    data,
-    error: null
-  };
+	return {
+		data,
+		error: null,
+	};
 }

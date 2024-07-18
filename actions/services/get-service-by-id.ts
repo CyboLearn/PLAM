@@ -38,7 +38,7 @@ export async function getServiceById({
 		console.error(error);
 		return {
 			data: null,
-			error: new Error(error.message)
+			error: new Error(error.message),
 		};
 	}
 

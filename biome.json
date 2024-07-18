@@ -1,4 +1,7 @@
 {
+	"files": {
+		"ignore": [".million/**", ".next/**", ".no-commit/**", "node_modules/**"]
+	},
 	"linter": {
 		"rules": {
 			"suspicious": {

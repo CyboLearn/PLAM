@@ -11,9 +11,9 @@ export default function DashboardPage() {
 	return (
 		<main>
 			<PageHeading
-        title="Dashboard"
-        description="Dashboard for your Personal Large Action Model"
-      />
+				title="Dashboard"
+				description="Dashboard for your Personal Large Action Model"
+			/>
 		</main>
 	);
 }

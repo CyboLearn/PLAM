@@ -3,13 +3,9 @@
 import type { Service } from "@/actions/services/get-available-services";
 
 export function AboutService({
-  service
+	service,
 }: {
-  readonly service: Service;
-}){
-  return (
-    <div>
-
-    </div>
-  )
+	readonly service: Service;
+}) {
+	return <div></div>;
 }

@@ -7,9 +7,9 @@ export async function createPost() {
 }
 
 /**
- * 
+ *
  * Reel Specifications:
- * 
+ *
  * Container: MOV or MP4 (MPEG-4 Part 14), no edit lists, moov atom at the front of the file.
  * Audio codec: AAC, 48khz sample rate maximum, 1 or 2 channels (mono or stereo).
  * Video codec: HEVC or H264, progressive scan, closed GOP, 4:2:0 chroma subsampling.
@@ -21,24 +21,24 @@ export async function createPost() {
  * Audio bitrate: 128kbps
  * Duration: 15 mins maximum, 3 seconds minimum
  * File size: 1GB maximum
- * 
+ *
  */
 export async function postToInstagramReels({
-  instagramUserId,
-  videoUrl,
-  description,
-  thumbnailOffset = 0,
-  shareToFeed = true,
+	instagramUserId,
+	videoUrl,
+	description,
+	thumbnailOffset = 0,
+	shareToFeed = true,
 }: {
-  readonly instagramUserId: string;
-  readonly videoUrl: string;
-  readonly description: string;
-  readonly thumbnailOffset?: number;
-  readonly shareToFeed?: boolean;
+	readonly instagramUserId: string;
+	readonly videoUrl: string;
+	readonly description: string;
+	readonly thumbnailOffset?: number;
+	readonly shareToFeed?: boolean;
 }) {
-  // make a check to ensure the video is within the specifications
+	// make a check to ensure the video is within the specifications
 
-  // select access_token
+	// select access_token
 
 	return {
 		ig_ig: null,

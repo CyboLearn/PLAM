@@ -38,7 +38,10 @@ export default async function ServicePage({
 
 	return (
 		<main>
-			<PageHeading title={data?.service_name} description={data?.description ?? "A PLAM Service."} />
+			<PageHeading
+				title={data?.service_name}
+				description={data?.description ?? "A PLAM Service."}
+			/>
 			<pre>{JSON.stringify(data, null, 2)}</pre>
 		</main>
 	);

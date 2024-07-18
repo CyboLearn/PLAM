@@ -44,7 +44,10 @@ export async function makeFacebookApiRequest({
 	const queryString = new URLSearchParams(query).toString();
 
 	const response = await fetch(
-		`https://${host}/${version}/${endpoint}/${resource}?${queryString}`.replaceAll("//", "/"),
+		`https://${host}/${version}/${endpoint}/${resource}?${queryString}`.replaceAll(
+			"//",
+			"/",
+		),
 		{
 			method,
 			headers,

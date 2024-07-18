@@ -10,9 +10,7 @@ export const metadata = generatePageMeta({
 export default function TermsOfService() {
 	return (
 		<main>
-			<Heading>
-				Terms of Service
-			</Heading>
+			<Heading>Terms of Service</Heading>
 		</main>
 	);
 }
