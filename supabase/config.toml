@@ -168,14 +168,14 @@ skip_nonce_check = false
 
 [auth.external.facebook]
 enabled = true
-client_id = "env(FACEBOOK_APP_ID)"
-secret = "env(FACEBOOK_APP_SECRET)"
+client_id = "env(FACEBOOK_CLIENT_ID)"
+secret = "env(FACEBOOK_CLIENT_SECRET)"
 redirect_uri = "http://localhost:54321/auth/v1/callback"
 
 [auth.external.google]
 enabled = true
-client_id = "env(GOOGLE_APP_ID)"
-secret = "env(GOOGLE_APP_SECRET)"
+client_id = "env(GOOGLE_CLIENT_ID)"
+secret = "env(GOOGLE_CLIENT_SECRET)"
 redirect_uri = "http://localhost:54321/auth/v1/callback"
 
 [edge_runtime]

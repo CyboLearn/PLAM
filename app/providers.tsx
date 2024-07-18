@@ -9,27 +9,32 @@ import { ThemeProvider, useTheme } from "next-themes";
 // Sonner
 import { Toaster as Sonner } from "sonner";
 
+// Million
+import { MillionLintProvider } from "@million/lint/runtime";
+
 export function Providers({
-  children,
+	children,
 }: {
-  readonly children: React.ReactNode;
+	readonly children: React.ReactNode;
 }) {
-  return (
-    <AuthProvider>
-      <ThemeProvider attribute="class" disableTransitionOnChange enableSystem>
-        {children}
-        <Toaster />
-      </ThemeProvider>
-    </AuthProvider>
-  );
+	return (
+		<MillionLintProvider>
+			<AuthProvider>
+				<ThemeProvider attribute="class" disableTransitionOnChange enableSystem>
+					{children}
+					<Toaster />
+				</ThemeProvider>
+			</AuthProvider>
+		</MillionLintProvider>
+	);
 }
 
 export function Toaster() {
-  const { resolvedTheme } = useTheme();
+	const { resolvedTheme } = useTheme();
 
-  if (!resolvedTheme) return null;
+	if (!resolvedTheme) return null;
 
-  return (
-    <Sonner richColors theme={resolvedTheme === "dark" ? "dark" : "light"} />
-  );
+	return (
+		<Sonner richColors theme={resolvedTheme === "dark" ? "dark" : "light"} />
+	);
 }
