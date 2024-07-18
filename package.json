@@ -24,6 +24,7 @@
     "@types/uuid": "^10.0.0",
     "ai": "^3.2.16",
     "clsx": "^2.1.1",
+    "crypto": "^1.0.1",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.2.13",
     "input-otp": "^1.2.4",

@@ -7,6 +7,7 @@ import {
 	ArrowPathIcon,
 	ArrowRightIcon,
 	TrashIcon,
+	ExclamationCircleIcon,
 } from "@heroicons/react/20/solid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,6 +18,7 @@ interface Connection {
 	description: string;
 	connected?: boolean;
 	cta?: string;
+	beta?: boolean;
 }
 
 export function ExternalAccountsAndConnections({
@@ -79,12 +81,18 @@ export function ExternalAccountsAndConnections({
 			/>
 			<CardGroup>
 				{connections.map((connection) => {
-					const cta = connection.connected ? "Disconnect" : "Connect";
-					const CTAIcon = connection.connected ? (
+					let cta = connection.connected ? "Disconnect" : "Connect";
+					if (connection.beta) {
+						cta = "Coming soon";
+					}
+					let CTAIcon = connection.connected ? (
 						<TrashIcon className="size-4 mr-2" />
 					) : (
 						<ArrowRightIcon className="size-4 mr-2" />
 					);
+					if (connection.beta) {
+						CTAIcon = <ExclamationCircleIcon className="size-4 mr-2" />;
+					}
 					const onClick = connection.connected
 						? () => disconnectPlatform(connection.id)
 						: () => linkPlatform(connection.id);
@@ -98,7 +106,7 @@ export function ExternalAccountsAndConnections({
 							<div className="flex flex-col min-w-36 gap-y-1">
 								<Button
 									color={connection.connected ? "red" : "dark/white"}
-									disabled={!!disabledButtons[connection.id]}
+									disabled={!!disabledButtons[connection.id] || connection.beta}
 									onClick={onClick}
 								>
 									{disabledButtons[connection.id] === true ? "Loading" : cta}

@@ -2,6 +2,8 @@
 
 import { createClient } from "@/utils/supabase/server";
 
+import { createHash } from "crypto";
+
 export type SupportedPlatforms = "facebook" | "google" | "tiktok";
 
 export async function linkAccount({
@@ -9,41 +11,30 @@ export async function linkAccount({
 }: {
 	readonly platform: SupportedPlatforms;
 }) {
-	const supabase = createClient();
-	/**const { data: identityList, error: errorIdentities } =
-		await supabase.auth.getUserIdentities();
+	switch (platform) {
+		case "facebook":
+			return await linkFacebook();
 
-	if (errorIdentities) {
-		return {
-			error: errorIdentities.message,
-			redirectUrl: null,
-		};
-	}
+		case "google":
+			return await linkGoogle();
 
-	const { identities = [] } = identityList;
+		case "tiktok":
+			return await linkTikTok();
 
-	if (identities?.find((identity) => identity.provider === platform)) {
-		const identity = identities.find(
-			(identity) => identity.provider === platform,
-		);
-
-		const { error: unlinkError } = await supabase.auth.unlinkIdentity({
-			provider: platform,
-			user_id: identity?.user_id,
-			identity_id: identity?.identity_id,
-		} as UserIdentity);
-
-		if (unlinkError) {
+		default:
 			return {
-				error: unlinkError.message,
+				error: "Invalid platform",
 				redirectUrl: null,
 			};
-		}
-	}*/
+	}
+}
 
-	if (platform === "facebook") {
+async function linkFacebook() {
+	const supabase = createClient();
+
+	try {
 		const { data, error } = await supabase.auth.linkIdentity({
-			provider: platform,
+			provider: "facebook",
 			options: {
 				scopes: "public_profile,email",
 				redirectTo: `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://plam.app"}/api/callback/facebook`,
@@ -64,9 +55,19 @@ export async function linkAccount({
 			error: null,
 			redirectUrl: data?.url,
 		};
+	} catch (error) {
+		console.error(error);
+		return {
+			error: "An unexpected error occurred.",
+			redirectUrl: null,
+		};
 	}
+}
 
-	if (platform === "google") {
+async function linkGoogle() {
+	const supabase = createClient();
+
+	try {
 		const { data, error } = await supabase.auth.linkIdentity({
 			provider: "google",
 			options: {
@@ -90,10 +91,50 @@ export async function linkAccount({
 			error: null,
 			redirectUrl: data?.url,
 		};
+	} catch (error) {
+		console.error(error);
+		return {
+			error: "An unexpected error occurred.",
+			redirectUrl: null,
+		};
 	}
+}
 
-	return {
-		error: "Invalid platform",
-		redirectUrl: null,
-	};
+async function linkTikTok() {
+	try {
+		// generate 16 hexa random string
+		const csrf = Array.from({ length: 16 }, () =>
+			Math.floor(Math.random() * 16).toString(16),
+		).join("");
+
+		// using S256, generate a code challenge
+		const codeChallenge = createHash("sha256").update(csrf).digest("base64");
+
+		const queryParams = {
+			client_key: process.env.TIKTOK_CLIENT_ID!,
+			response_type: "code",
+			scope: "user.info.basic,video.create",
+			redirect_uri: `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://plam.app"}/api/callback/tiktok`,
+			state: csrf,
+			code_challenge: codeChallenge,
+			code_challenge_method: "S256",
+		} as Record<string, string>;
+
+		const url = new URL("https://www.tiktok.com/v2/auth/authorize/");
+
+		for (const key of Object.keys(queryParams)) {
+			url.searchParams.append(key, queryParams[key]);
+		}
+
+		return {
+			error: null,
+			redirectUrl: url.toString(),
+		};
+	} catch (error) {
+		console.error(error);
+		return {
+			error: "An unexpected error occurred.",
+			redirectUrl: null,
+		};
+	}
 }

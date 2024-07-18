@@ -11,7 +11,7 @@ export const metadata = generatePageMeta({
 
 export default async function SettingsPage() {
 	const { data } = await getSocialMediaAccounts();
-	
+
 	const possibleConnections = [
 		{
 			id: "facebook",
@@ -26,6 +26,14 @@ export default async function SettingsPage() {
 			description:
 				"Connect your Google & YouTube accounts to allow PLAM to do manage on your behalf.",
 			connected: data?.some((d) => d.platform === "google") ?? false,
+		},
+		{
+			id: "tiktok",
+			name: "TikTok",
+			description:
+				"Connect your TikTok account to allow PLAM to post on your behalf.",
+			connected: data?.some((d) => d.platform === "tiktok") ?? false,
+			beta: true,
 		},
 	];
 
