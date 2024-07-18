@@ -46,12 +46,12 @@ export default function ChatPanel() {
 	const { converse } = useActions();
 	const aiState = useAIState();
 	const chatContainerRef = useRef<HTMLDivElement>(null);
-	const [chatId] = useState(aiState[0].chatId);
 	const [chatTitle, setChatTitle] = useState(aiState[0].chatTitle);
 	const [newChatTitle, setNewChatTitle] = useState(aiState[0].chatTitle);
 	const [privacy, setPrivacy] = useState<"Private" | "Public">(
 		aiState[0].privacy,
 	);
+	const chatId = aiState[0].chatId;
 
 	const [changeTitleDialog, setChangeTitleDialog] = useState(false);
 	const [changePrivacyDialog, setChangePrivacyDialog] = useState(false);

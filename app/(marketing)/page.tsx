@@ -69,8 +69,6 @@ export default function Homepage() {
 						Anytime.
 						<br />
 						Anywhere.
-						<br />
-						PLAM.
 					</h1>
 					<p className="text-zinc-50 mt-3 text-xl font-thin">
 						A Personal Large Action Model built to assist you with everything.

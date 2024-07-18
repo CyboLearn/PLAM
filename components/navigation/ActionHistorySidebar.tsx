@@ -56,66 +56,62 @@ export function ActionHistorySidebar() {
 			}
 		}
 
-		function handleError(error: any) {
-			console.error("Failed to fetch action history:", error);
-			setStatus("error");
-		}
-
-		function groupActionHistory(data: any[]): GroupedActionHistory {
-			const today = new Date();
-			const yesterday = subDays(today, 1);
-			const last7Days = subDays(today, 7);
-
-			return data.reduce((acc: GroupedActionHistory, action: ActionHistory) => {
-				const actionDate = new Date(action.created_at);
-				const category = categorizeAction(
-					actionDate,
-					yesterday,
-					last7Days,
-				);
-
-				if (!acc[category]) {
-					acc[category] = [];
-				}
-
-				acc[category].push(action);
-
-				return acc;
-			}, {});
-		}
-
-		function categorizeAction(
-			actionDate: Date,
-			yesterday: Date,
-			last7Days: Date,
-		): string {
-			if (isToday(actionDate)) {
-				return "Today";
-			}
-			if (isYesterday(actionDate)) {
-				return "Yesterday";
-			}
-			if (isWithinInterval(actionDate, { start: last7Days, end: yesterday })) {
-				return "Previous 7 Days";
-			}
-			return "Older";
-		}
-
-		function sortGroupedHistory(groupedHistory: GroupedActionHistory) {
-			for (const category of Object.keys(groupedHistory)) {
-				groupedHistory[category].sort(
-					(a: ActionHistory, b: ActionHistory) =>
-						new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-				);
-			}
-		}
-
 		if (trigger) {
 			fetchData();
 		}
 
 		fetchData();
 	}, [trigger]);
+
+	function handleError(error: any) {
+		console.error("Failed to fetch action history:", error);
+		setStatus("error");
+	}
+
+	function groupActionHistory(data: any[]): GroupedActionHistory {
+		const today = new Date();
+		const yesterday = subDays(today, 1);
+		const last7Days = subDays(today, 7);
+
+		return data.reduce((acc: GroupedActionHistory, action: ActionHistory) => {
+			const actionDate = new Date(action.created_at);
+			const category = categorizeAction(actionDate, yesterday, last7Days);
+
+			if (!acc[category]) {
+				acc[category] = [];
+			}
+
+			acc[category].push(action);
+
+			return acc;
+		}, {});
+	}
+
+	function categorizeAction(
+		actionDate: Date,
+		yesterday: Date,
+		last7Days: Date,
+	): string {
+		if (isToday(actionDate)) {
+			return "Today";
+		}
+		if (isYesterday(actionDate)) {
+			return "Yesterday";
+		}
+		if (isWithinInterval(actionDate, { start: last7Days, end: yesterday })) {
+			return "Previous 7 Days";
+		}
+		return "Older";
+	}
+
+	function sortGroupedHistory(groupedHistory: GroupedActionHistory) {
+		for (const category of Object.keys(groupedHistory)) {
+			groupedHistory[category].sort(
+				(a: ActionHistory, b: ActionHistory) =>
+					new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+			);
+		}
+	}
 
 	const categoryOrder = ["Today", "Yesterday", "Previous 7 Days", "Older"];
 
