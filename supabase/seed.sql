@@ -22,8 +22,8 @@ SET row_security = off;
 -- Data for Name: services; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."services" ("service_id", "created_at", "service_name", "service_slug", "is_enabled") VALUES
-	('bfe16d52-5d4e-46c7-999a-c1d6a6869326', '2024-07-08 11:41:44.050041+00', 'ElevenLabs Dubbing', 'elevenlabs-dubbing', true);
+INSERT INTO "public"."services" ("service_id", "created_at", "service_name", "service_slug", "service_state") VALUES
+	('bfe16d52-5d4e-46c7-999a-c1d6a6869326', '2024-07-08 11:41:44.050041+00', 'ElevenLabs Dubbing', 'elevenlabs-dubbing', 'Beta Testing');
 
 
 --
