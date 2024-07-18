@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
       - name: Fix formatting
         run: bunx @biomejs/biome format --write ./
       - name: Apply fixes
