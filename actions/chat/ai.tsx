@@ -62,7 +62,7 @@ export async function converse(
 	});
 
 	const result = await streamUI({
-		model: openai("gpt-3.5-turbo"),
+		model: openai("gpt-4o-mini"),
 		messages: [
 			...aiState.get().history.map((message: any) => ({
 				role: message.role,
