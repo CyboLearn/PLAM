@@ -69,6 +69,7 @@ export default async function FilePage({
 	}
 
 	if (error) {
+		console.log(error);
 		return <FileError error={error.message} />;
 	}
 
