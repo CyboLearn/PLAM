@@ -1,7 +1,78 @@
+import * as jose from "jose";
+import { verifyKey } from "@unkey/api";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+async function signJWT(
+	payload: jose.JWTPayload,
+	secret: string,
+): Promise<string> {
+	const alg = "HS256";
+	const secretKey = new TextEncoder().encode(secret);
+
+	const jwt = await new jose.SignJWT(payload)
+		.setProtectedHeader({ alg })
+		.setIssuedAt()
+		.setIssuer("urn:example:issuer")
+		.setAudience("urn:example:audience")
+		.setExpirationTime("2h")
+		.sign(secretKey);
+
+	return jwt;
+}
+
 export async function middleware(request: NextRequest) {
+	const _headers = new Headers(request.headers);
+
+	if (_headers.has("x-api-key")) {
+		const apiKey = _headers.get("x-api-key") ?? "";
+
+		const { result, error } = await verifyKey({
+			key: apiKey,
+			apiId: process.env.UNKEY_API_ID!,
+		});
+
+		if (error) {
+			return NextResponse.json(
+				{
+					error: "Invalid API key",
+				},
+				{
+					status: 401,
+				},
+			);
+		}
+
+		const ownerId = result?.ownerId ?? undefined;
+
+		if (!ownerId) {
+			return NextResponse.json(
+				{
+					error:
+						"Your API Key is malformed. Create a new one to fix this issue.",
+				},
+				{
+					status: 401,
+				},
+			);
+		}
+
+		const token = await signJWT(
+			{
+				sub: ownerId,
+			},
+			process.env.SUPABASE_JWT_SECRET!,
+		);
+
+		_headers.set("Authorization", `Bearer ${token}`);
+
+		return NextResponse.next({
+			request: {
+				headers: _headers,
+			},
+		});
+	}
+
 	let supabaseResponse = NextResponse.next({
 		request,
 	});

@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export function createClient() {
+export function createClient(authorization?: string) {
 	const cookieStore = cookies();
 
 	if (
@@ -23,6 +23,11 @@ export function createClient() {
 					for (const { name, value, options } of cookiesToSet) {
 						cookieStore.set(name, value, options);
 					}
+				},
+			},
+			global: {
+				headers: {
+					...(authorization ? { Authorization: authorization } : {}),
 				},
 			},
 		},
