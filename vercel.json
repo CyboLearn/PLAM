@@ -1,0 +1,8 @@
+{
+	"rewrites": [
+		{
+			"source": "/v1/:match*",
+			"destination": "https://api.plam.app/v1/:match*"
+		}
+	]
+}
