@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
 		throw error;
 	}
 
-	console.log(data)
+	console.log(data);
 
 	const files = data || [];
 
