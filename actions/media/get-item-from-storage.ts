@@ -66,6 +66,7 @@ export async function getItemFromStorage({
 	if (!isFile) {
 		folder = `/${folderFileNameSplit.join("/")}`;
 	}
+	console.log(folder, justTheFileName);
 
 	try {
 		const user = await getUser(supabase);
@@ -108,6 +109,8 @@ export async function getItemFromStorage({
 		}
 
 		if (itemDetails.length === 0) {
+			console.warn("This item or directory does not exist.");
+			console.warn(itemDetails);
 			throw new Error("This item or directory does not exist.");
 		}
 
