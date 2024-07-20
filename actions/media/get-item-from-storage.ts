@@ -77,15 +77,6 @@ export async function getItemFromStorage({
 			justTheFileName,
 		);
 
-		console.warn({
-			itemDetails,
-			user,
-			folder,
-			isFile,
-			justTheFileName,
-			filename,
-		});
-
 		if (isFile) {
 			const singleItemDetails = itemDetails.find(
 				(item) => item.name === decodeURIComponent(justTheFileName),
