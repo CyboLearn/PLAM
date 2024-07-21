@@ -20,6 +20,7 @@ async function getItemDetails(
 	folder: string,
 	isFile: boolean,
 	justTheFileName: string,
+	isRootFolder: boolean,
 ) {
 	const { data: itemDetails, error: itemError } = await supabase.storage
 		.from("media")
@@ -30,6 +31,19 @@ async function getItemDetails(
 	if (itemError || !itemDetails) {
 		throw new Error(itemError ? itemError.message : "Item not found.");
 	}
+
+	if (isRootFolder && itemDetails.length === 0) {
+		await createUserRootFolder(userId);
+		return getItemDetails(
+			supabase,
+			userId,
+			folder,
+			isFile,
+			justTheFileName,
+			isRootFolder,
+		);
+	}
+
 	return itemDetails;
 }
 
@@ -56,6 +70,8 @@ export async function getItemFromStorage({
 }) {
 	const supabase = createClient();
 
+	const isRootFolder = filename === "";
+
 	const folderFileNameSplit = filename.split("/");
 	const fileName = folderFileNameSplit[folderFileNameSplit.length - 1];
 	const isFile = fileName.includes(".");
@@ -75,6 +91,7 @@ export async function getItemFromStorage({
 			folder,
 			isFile,
 			justTheFileName,
+			isRootFolder,
 		);
 
 		if (isFile) {
@@ -186,4 +203,16 @@ export async function getItemsInStorage(folder?: string) {
 		data: data as StorageItem[] | null,
 		error,
 	};
+}
+
+async function createUserRootFolder(userId: string) {
+	const supabase = createClient();
+
+	const { error } = await supabase.storage
+		.from("media")
+		.upload(`${userId}/ignore.plam`, new File([], ""));
+
+	if (error) {
+		throw new Error(error.message);
+	}
 }
