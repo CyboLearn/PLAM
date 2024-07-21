@@ -1,5 +1,7 @@
 "use server";
 
+// IMPORTANT: This route does not work and is currently a placeholder.
+
 import { StoreToken } from "@/utils/security/storeToken";
 import { encrypt } from "@/utils/security/token";
 import { createClient } from "@/utils/supabase/server";
@@ -19,12 +21,14 @@ export async function GET(request: NextRequest) {
 			data: { user },
 		} = await supabase.auth.getUser();
 
+		const expiresIn = 86400; // 24 hours
 		const userId = user?.id;
 		const providerToken = await encrypt("");
 		const providerRefreshToken = await encrypt("");
 		const externalAccountId = "";
 
 		if (
+			!expiresIn ||
 			!userId ||
 			!providerToken ||
 			!externalAccountId ||
@@ -36,7 +40,7 @@ export async function GET(request: NextRequest) {
 		const { error: tokenError } = await StoreToken({
 			userId,
 			providerToken,
-			expiresIn: 86400,
+			expiresIn: expiresIn,
 			externalAccountId,
 			platform: "tiktok",
 			providerRefreshToken,
