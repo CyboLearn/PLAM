@@ -11,6 +11,7 @@ import { FolderView } from "@/components/storage/folder-view";
 import { UploadForm } from "@/components/storage/upload";
 import { FileError } from "@/components/storage/file-error";
 import { PageBreadcrumbs } from "@/components/ui/page-breadcrumbs";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
 	params: { filename = null },
@@ -69,8 +70,11 @@ export default async function FilePage({
 	}
 
 	if (error) {
-		console.log(error);
-		return <FileError error={error.message} />;
+		if (filename?.length === 0 || filename === null) {
+			return <FileError error={error.message} />;
+		}
+
+		return redirect(`/storage/${filename?.slice(0, -1).join("/")}`);
 	}
 
 	return (
@@ -114,6 +118,7 @@ export default async function FilePage({
 					fileUrl={data?.signedUrl}
 					filetype={getMediaType(data?.metadata?.mimetype ?? "other")}
 					filename={decodeURIComponent(filename.join("/"))}
+					fileId={data?.fileId}
 				/>
 			)}
 			{type === "folder" && (

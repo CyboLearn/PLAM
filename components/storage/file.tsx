@@ -2,7 +2,7 @@
 
 import { FileError } from "@/components/storage/file-error";
 import { FilePreview } from "@/components/storage/file-preview";
-import { Text } from "@/components/ui/text";
+import { Code, Text } from "@/components/ui/text";
 import type { MediaType } from "@/utils/media/getMediaType";
 import { Button } from "@/components/ui/button";
 import { postShortVideo } from "@/actions/external-accounts/social-media/post-short-video";
@@ -11,11 +11,15 @@ export function FileComponent({
 	fileUrl = "",
 	filetype = "image",
 	filename = "",
+	fileId = "",
 }: {
 	readonly fileUrl: string | undefined;
 	readonly filetype?: MediaType;
 	readonly filename?: string;
+	readonly fileId?: string;
 }) {
+	const showVideoActions = false;
+
 	if (!fileUrl) {
 		return <FileError error={new Error("File not found.")} />;
 	}
@@ -28,7 +32,7 @@ export function FileComponent({
 			</div>
 			<div className="flex flex-col gap-4">
 				<Text>This is a preview of the file you selected.</Text>
-				{filetype === "video" && (
+				{filetype === "video" && showVideoActions && (
 					<div className="flex flex-row gap-4">
 						<Button
 							disabled
@@ -80,6 +84,7 @@ export function FileComponent({
 						</Button>
 					</div>
 				)}
+				<Code>{fileId ? `File ID: ${fileId}` : "File ID not found"}</Code>
 			</div>
 		</main>
 	);

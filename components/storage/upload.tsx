@@ -93,7 +93,9 @@ export function UploadForm({
 				throw new Error("User not found.");
 			}
 
-			const location = folder ? `${user.id}/${folder}` : user.id;
+			const location = folder
+				? decodeURIComponent(`${user.id}/${folder}`)
+				: user.id;
 
 			// upload to user.id/[file.name]
 			const { error } = await supabase.storage
@@ -135,7 +137,9 @@ export function UploadForm({
 				throw new Error("User not found.");
 			}
 
-			const location = folder ? `${user.id}/${folder}` : user.id;
+			const location = folder
+				? decodeURIComponent(`${user.id}/${folder}`)
+				: user.id;
 
 			const { error } = await supabase.storage
 				.from("media")
@@ -175,7 +179,9 @@ export function UploadForm({
 				throw new Error("User not found.");
 			}
 
-			const location = folder ? `${user.id}/${folder}` : user.id;
+			const location = folder
+				? decodeURIComponent(`${user.id}/${folder}`)
+				: user.id;
 
 			const { data, error } = await supabase.storage
 				.from("media")
@@ -188,9 +194,12 @@ export function UploadForm({
 			const files = data || [];
 
 			for (const file of files) {
-				await supabase.storage
+				const { error } = await supabase.storage
 					.from("media")
 					.remove([`${location}/${file.name}`]);
+				if (error) {
+					console.error(error);
+				}
 			}
 
 			setFolderDeleteStatus("success");
