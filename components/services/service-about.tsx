@@ -8,7 +8,8 @@ export function AboutService({
 	readonly service: Service | null;
 }) {
 	return (
-	<div>
-		<pre>{JSON.stringify(service, null, 2)}</pre>
-	</div>);
+		<div>
+			<pre>{JSON.stringify(service, null, 2)}</pre>
+		</div>
+	);
 }
