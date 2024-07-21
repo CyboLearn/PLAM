@@ -118,6 +118,7 @@ export default async function FilePage({
 					fileUrl={data?.signedUrl}
 					filetype={getMediaType(data?.metadata?.mimetype ?? "other")}
 					filename={decodeURIComponent(filename.join("/"))}
+					fileId={data?.fileId}
 				/>
 			)}
 			{type === "folder" && (

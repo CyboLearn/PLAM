@@ -24,8 +24,8 @@ async function getItemDetails(
 ) {
 	const { data: itemDetails, error: itemError } = await supabase.storage
 		.from("media")
-		.list(`${userId}${decodeURIComponent(folder)}`, {
-			search: isFile ? decodeURIComponent(justTheFileName) : undefined,
+		.list(`${userId}/${folder}`, {
+			search: isFile ? justTheFileName : undefined,
 		});
 
 	if (itemError || !itemDetails) {
@@ -55,7 +55,7 @@ async function getSignedUrl(
 ) {
 	const { data, error } = await supabase.storage
 		.from("media")
-		.createSignedUrl(`${userId}${folder}/${filename}`, 60);
+		.createSignedUrl(`${userId}/${folder}/${filename}`, 600);
 
 	if (error) {
 		throw new Error(error.message);
@@ -63,25 +63,57 @@ async function getSignedUrl(
 	return data.signedUrl;
 }
 
-export async function getItemFromStorage({
-	filename,
-}: {
-	readonly filename: string;
-}) {
-	const supabase = createClient();
+async function getFileId(
+	supabase: SupabaseClient,
+	userId: string,
+	folder: string,
+	justTheFileName: string,
+) {
+	const { data: fileIdData, error: fileIdError } = await supabase
+		.schema("storage")
+		.from("objects")
+		.select("id")
+		.eq("name", `${userId}/${folder}/${justTheFileName}`)
+		.maybeSingle();
 
-	const isRootFolder = filename === "";
+	if (fileIdError) {
+		throw new Error(fileIdError.message);
+	}
 
+	if (!fileIdData) {
+		throw new Error("File ID not found.");
+	}
+
+	return fileIdData.id;
+}
+
+function parseFilename(filename: string) {
 	const folderFileNameSplit = filename.split("/");
 	const fileName = folderFileNameSplit[folderFileNameSplit.length - 1];
 	const isFile = fileName.includes(".");
-
-	let folder = `/${folderFileNameSplit.slice(0, folderFileNameSplit.length - 1).join("/")}`;
-	const justTheFileName = folderFileNameSplit[folderFileNameSplit.length - 1];
+	let folder = `${folderFileNameSplit.slice(0, folderFileNameSplit.length - 1).join("/")}`;
+	const justTheFileName = decodeURIComponent(
+		folderFileNameSplit[folderFileNameSplit.length - 1].replaceAll("//", "/"),
+	);
 
 	if (!isFile) {
-		folder = `/${folderFileNameSplit.join("/")}`;
+		folder = `${folderFileNameSplit.join("/")}`;
 	}
+
+	folder = decodeURIComponent(`${folder}`.replaceAll("//", "/")).replaceAll(
+		"//",
+		"/",
+	);
+
+	return { folder, justTheFileName, isFile };
+}
+
+export async function getItemFromStorage({
+	filename,
+}: { readonly filename: string }) {
+	const supabase = createClient();
+	const isRootFolder = filename === "";
+	const { folder, justTheFileName, isFile } = parseFilename(filename);
 
 	try {
 		const user = await getUser(supabase);
@@ -96,28 +128,31 @@ export async function getItemFromStorage({
 
 		if (isFile) {
 			const singleItemDetails = itemDetails.find(
-				(item) => item.name === decodeURIComponent(justTheFileName),
+				(item) => item.name === justTheFileName,
 			);
 
 			if (!singleItemDetails) {
 				throw new Error("Item not found.");
 			}
 
-			let signedUrl = "";
-			if (singleItemDetails.metadata !== null) {
-				signedUrl = await getSignedUrl(
-					supabase,
-					user.id,
-					folder,
-					justTheFileName,
-				);
-			}
+			const signedUrl =
+				singleItemDetails.metadata !== null
+					? await getSignedUrl(supabase, user.id, folder, justTheFileName)
+					: "";
+
+			const fileId = await getFileId(
+				supabase,
+				user.id,
+				folder,
+				justTheFileName,
+			);
 
 			return {
 				userId: user.id,
 				data: {
 					...singleItemDetails,
-					signedUrl: signedUrl,
+					signedUrl,
+					fileId,
 				},
 				error: null,
 				type: singleItemDetails?.metadata === null ? "folder" : "file",
@@ -131,7 +166,13 @@ export async function getItemFromStorage({
 
 		return {
 			userId: user.id,
-			data: { ...itemDetails, signedUrl: "", name: "", metadata: null },
+			data: {
+				...itemDetails,
+				signedUrl: "",
+				name: "",
+				metadata: null,
+				fileId: null,
+			},
 			error: null,
 			type: "folder",
 		};
@@ -171,7 +212,9 @@ export interface StorageItem {
 
 export async function getItemsInStorage(folder?: string) {
 	const supabase = createClient();
-	const searchInFolder = folder ? `/${folder}/` : "";
+	const searchInFolder = folder
+		? decodeURIComponent(`${folder}/`).replaceAll("//", "/")
+		: "";
 
 	const {
 		data: { user },
@@ -196,7 +239,7 @@ export async function getItemsInStorage(folder?: string) {
 
 	const { data, error } = await supabase.storage
 		.from("media")
-		.list(`${user.id}${decodeURIComponent(searchInFolder)}`);
+		.list(`${user.id}/${searchInFolder}`);
 
 	return {
 		userId: user.id,

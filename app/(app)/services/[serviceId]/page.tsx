@@ -1,5 +1,6 @@
 import { getServiceById } from "@/actions/services/get-service-by-id";
 import { generatePageMeta } from "@/app/seo/generate";
+import { AboutService } from "@/components/services/service-about";
 import { PageHeading } from "@/components/ui/page-heading";
 
 export async function generateMetadata({
@@ -28,10 +29,10 @@ export default async function ServicePage({
 	const { data, error } = await getServiceById({ serviceIdOrSlug: serviceId });
 
 	if (error) {
-		console.error(error);
 		return (
 			<main>
 				<PageHeading title="Service" description="A PLAM Service." />
+				<AboutService service={null} />
 			</main>
 		);
 	}
@@ -42,7 +43,7 @@ export default async function ServicePage({
 				title={data?.service_name}
 				description={data?.description ?? "A PLAM Service."}
 			/>
-			<pre>{JSON.stringify(data, null, 2)}</pre>
+			<AboutService service={data} />
 		</main>
 	);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { PageSubheading } from "@/components/ui/page-heading";
-import { Card, CardGroup } from "@/components/ui/card";
+import { Card, CardGroup } from "@/components/ui/old-card";
 import { Button } from "../ui/button";
 import {
 	ArrowPathIcon,

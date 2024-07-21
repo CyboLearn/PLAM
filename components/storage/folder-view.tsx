@@ -171,17 +171,17 @@ export function FolderView({
 					return (
 						<div
 							key={item.id}
-							className="p-4 rounded-lg border border-zinc-950/10 dark:border-white/10 flex flex-row"
+							className="p-4 rounded-lg border border-zinc-950/10 dark:border-white/10 flex flex-row max-w-full"
 						>
 							<div className="flex flex-col">
-								<Text className="!text-sm">
+								<Text className="!text-sm !truncate !max-w-56">
 									<TextLink
 										href={`/storage/${folder}/${item.name}`.replaceAll(
 											"//",
 											"/",
 										)}
 									>
-										<Strong>{item.name}</Strong>
+										<Strong className="">{item.name}</Strong>
 									</TextLink>
 								</Text>
 								<Text className="!text-xs">{item.metadata.mimetype}</Text>
