@@ -45,7 +45,7 @@ export function CardTitle({
 			/>
 		);
 	}
-	
+
 	return (
 		<Subheading
 			{...props}
