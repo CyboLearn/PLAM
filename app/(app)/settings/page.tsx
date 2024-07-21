@@ -40,6 +40,13 @@ export default async function SettingsPage() {
 			connected: data?.some((d) => d.platform === "tiktok") ?? false,
 			beta: true,
 		},
+		{
+			id: "twitter",
+			name: "X (formerly Twitter)",
+			description:
+				"Connect your X account to allow PLAM to post on your behalf.",
+			connected: data?.some((d) => d.platform === "twitter") ?? false,
+		},
 	];
 
 	return (

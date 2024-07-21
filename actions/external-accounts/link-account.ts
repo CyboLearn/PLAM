@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 
 import { createHash } from "crypto";
 
-export type SupportedPlatforms = "facebook" | "google" | "tiktok";
+export type SupportedPlatforms = "facebook" | "google" | "tiktok" | "twitter";
 
 export async function linkAccount({
 	platform,
@@ -20,6 +20,9 @@ export async function linkAccount({
 
 		case "tiktok":
 			return await linkTikTok();
+
+		case "twitter":
+			return await linkTwitter();
 
 		default:
 			return {
@@ -107,6 +110,7 @@ async function linkTikTok() {
 			Math.floor(Math.random() * 16).toString(16),
 		).join("");
 
+		// TODO: Implement this correctly
 		// using S256, generate a code challenge
 		const codeChallenge = createHash("sha256").update(csrf).digest("base64");
 
@@ -121,6 +125,46 @@ async function linkTikTok() {
 		} as Record<string, string>;
 
 		const url = new URL("https://www.tiktok.com/v2/auth/authorize/");
+
+		for (const key of Object.keys(queryParams)) {
+			url.searchParams.append(key, queryParams[key]);
+		}
+
+		return {
+			error: null,
+			redirectUrl: url.toString(),
+		};
+	} catch (error) {
+		console.error(error);
+		return {
+			error: "An unexpected error occurred.",
+			redirectUrl: null,
+		};
+	}
+}
+
+async function linkTwitter() {
+	try {
+		// generate 16 hexa random string
+		const csrf = Array.from({ length: 16 }, () =>
+			Math.floor(Math.random() * 16).toString(16),
+		).join("");
+
+		// TODO: Implement this correctly
+		// using S256, generate a code challenge
+		//const codeChallenge = createHash("sha256").update(csrf).digest("base64");
+
+		const queryParams = {
+			client_id: process.env.TWITTER_CLIENT_ID!,
+			response_type: "code",
+			scope: "tweet.read tweet.write offline.access users.read",
+			redirect_uri: `${process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://plam.app"}/api/callback/twitter`,
+			state: csrf,
+			code_challenge: "challenge",
+			code_challenge_method: "plain",
+		} as Record<string, string>;
+
+		const url = new URL("https://twitter.com/i/oauth2/authorize/");
 
 		for (const key of Object.keys(queryParams)) {
 			url.searchParams.append(key, queryParams[key]);
