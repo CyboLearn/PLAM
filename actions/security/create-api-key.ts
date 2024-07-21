@@ -38,15 +38,15 @@ export async function createApiKey(name = "API Key") {
 		name: name,
 		meta: {
 			enabled: true,
-		}
+		},
 	});
 
-  if (key.error) {
-    return {
-      data: null,
-      error: key.error.message,
-    };
-  }
+	if (key.error) {
+		return {
+			data: null,
+			error: key.error.message,
+		};
+	}
 
 	return {
 		data: {
