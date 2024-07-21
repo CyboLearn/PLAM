@@ -55,7 +55,10 @@ async function getSignedUrl(
 ) {
 	const { data, error } = await supabase.storage
 		.from("media")
-		.createSignedUrl(`${userId}/${folder}/${filename}`, 600);
+		.createSignedUrl(
+			`${userId}/${folder}/${filename}`.replaceAll("//", "/"),
+			600,
+		);
 
 	if (error) {
 		throw new Error(error.message);
@@ -73,7 +76,7 @@ async function getFileId(
 		.schema("storage")
 		.from("objects")
 		.select("id")
-		.eq("name", `${userId}/${folder}/${justTheFileName}`)
+		.eq("name", `${userId}/${folder}/${justTheFileName}`.replaceAll("//", "/"))
 		.maybeSingle();
 
 	if (fileIdError) {
@@ -239,7 +242,7 @@ export async function getItemsInStorage(folder?: string) {
 
 	const { data, error } = await supabase.storage
 		.from("media")
-		.list(`${user.id}/${searchInFolder}`);
+		.list(`${user.id}/${searchInFolder}`.replaceAll("//", "/"));
 
 	return {
 		userId: user.id,
