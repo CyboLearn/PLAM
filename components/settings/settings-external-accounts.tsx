@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Divider } from "../ui/divider";
 
 interface Connection {
 	id: string;
@@ -130,6 +131,7 @@ export function ExternalAccountsAndConnections({
 					);
 				})}
 			</CardGroup>
+			<Divider soft className="mt-6" />
 		</div>
 	);
 }

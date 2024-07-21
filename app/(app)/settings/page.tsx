@@ -1,5 +1,7 @@
 import { getSocialMediaAccounts } from "@/actions/external-accounts/get-accounts";
+import { listApiKeys } from "@/actions/security/list-api-keys";
 import { generatePageMeta } from "@/app/seo/generate";
+import { APIKeysSettings } from "@/components/settings/settings-api-keys";
 import { ExternalAccountsAndConnections } from "@/components/settings/settings-external-accounts";
 import { PageHeading } from "@/components/ui/page-heading";
 
@@ -9,8 +11,11 @@ export const metadata = generatePageMeta({
 	url: "/settings",
 });
 
+export const dynamic = "force-dynamic";
+
 export default async function SettingsPage() {
 	const { data } = await getSocialMediaAccounts();
+	const { data: apiKeys } = await listApiKeys();
 
 	const possibleConnections = [
 		{
@@ -45,6 +50,7 @@ export default async function SettingsPage() {
 			/>
 			<div className="flex flex-col gap-y-6">
 				<ExternalAccountsAndConnections connections={possibleConnections} />
+				<APIKeysSettings apiKeys={apiKeys} />
 			</div>
 		</main>
 	);
