@@ -22,7 +22,7 @@ export function FileError({
 				<Button href="/storage" color="dark/white">
 					Go back
 				</Button>
-				<Button href="/support" plain>
+				<Button href="/help" plain>
 					Contact Support
 				</Button>
 			</div>

@@ -223,7 +223,7 @@ export function NavigationProvider({
 									<DropdownLabel>Settings</DropdownLabel>
 								</DropdownItem>
 								<DropdownDivider />
-								<DropdownItem href="/support">
+								<DropdownItem href="/help">
 									<QuestionMarkCircleIcon />
 									<DropdownLabel>Support</DropdownLabel>
 								</DropdownItem>

@@ -15,7 +15,7 @@ export function ChatError() {
 				<Button href="/chat" color="dark/white">
 					Start a new chat
 				</Button>
-				<Button href="/support" plain>
+				<Button href="/help" plain>
 					Contact Support
 				</Button>
 			</div>
