@@ -21,12 +21,41 @@ async function signJWT(
 	return jwt;
 }
 
-export async function middleware(request: NextRequest) {
+function createResponseWithHeaders(headers: Headers) {
+	return NextResponse.next({
+		request: {
+			headers,
+		},
+	});
+}
+
+async function handleApiRequest(request: NextRequest, user: any) {
 	const _headers = new Headers(request.headers);
+	const apiKey = _headers.get("x-api-key") ?? undefined;
 
-	if (_headers.has("x-api-key")) {
-		const apiKey = _headers.get("x-api-key") ?? "";
+	if (!apiKey && !user) {
+		return NextResponse.json(
+			{
+				error: "API Key not provided",
+			},
+			{
+				status: 401,
+			},
+		);
+	}
 
+	if (!apiKey && user) {
+		const token = await signJWT(
+			{
+				sub: user.id,
+			},
+			process.env.SUPABASE_JWT_SECRET!,
+		);
+
+		_headers.set("Authorization", `Bearer ${token}`);
+	}
+
+	if (apiKey && !user) {
 		const { result, error } = await verifyKey({
 			key: apiKey,
 			apiId: process.env.UNKEY_API_ID!,
@@ -65,23 +94,24 @@ export async function middleware(request: NextRequest) {
 		);
 
 		_headers.set("Authorization", `Bearer ${token}`);
-
-		return NextResponse.next({
-			request: {
-				headers: _headers,
-			},
-		});
 	}
 
-	let supabaseResponse = NextResponse.next({
-		request,
+	return createResponseWithHeaders(_headers);
+}
+
+export async function middleware(request: NextRequest) {
+	const _headers = new Headers(request.headers);
+	let response = NextResponse.next({
+		request: {
+			headers: _headers,
+		},
 	});
 
 	if (
 		!process.env.NEXT_PUBLIC_SUPABASE_URL ||
 		!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 	) {
-		return supabaseResponse;
+		return response;
 	}
 
 	const supabase = createServerClient(
@@ -96,20 +126,27 @@ export async function middleware(request: NextRequest) {
 					for (const { name, value } of cookiesToSet) {
 						request.cookies.set(name, value);
 					}
-					supabaseResponse = NextResponse.next({
+					response = NextResponse.next({
 						request,
 					});
 					for (const { name, value, options } of cookiesToSet) {
-						supabaseResponse.cookies.set(name, value, options);
+						response.cookies.set(name, value, options);
 					}
 				},
 			},
 		},
 	);
 
-	await supabase.auth.getUser();
+	const {
+		data: { user },
+	} = await supabase.auth.getUser();
 
-	return supabaseResponse;
+	if (request.nextUrl.pathname.startsWith("/v1")) {
+		const v1Response = await handleApiRequest(request, user);
+		if (v1Response) return v1Response;
+	}
+
+	return response;
 }
 
 export const config = {
