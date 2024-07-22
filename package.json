@@ -17,6 +17,7 @@
 		"@nivo/bar": "^0.87.0",
 		"@nivo/core": "^0.87.0",
 		"@nivo/line": "^0.87.0",
+		"@openpanel/nextjs": "^0.0.10-beta",
 		"@supabase/ssr": "^0.4.0",
 		"@supabase/supabase-js": "^2.44.2",
 		"@svgr/webpack": "^8.1.0",
