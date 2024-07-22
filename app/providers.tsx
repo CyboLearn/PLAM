@@ -19,6 +19,7 @@ export function Providers({
 }) {
 	return (
 		<AuthProvider>
+			<OpenPanel />
 			<ThemeProvider attribute="class" disableTransitionOnChange enableSystem>
 				{children}
 				<Toaster />
